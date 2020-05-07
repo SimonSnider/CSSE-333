@@ -30,7 +30,7 @@ public class BroomstickManagementService {
 				JOptionPane.showMessageDialog(null, "Error Code 1: Broomstick Make and Model already exists");
 				break;
 			case 2:
-				JOptionPane.showMessageDialog(null, "Error Code 2: Release Date cannot be after today's date");;
+				JOptionPane.showMessageDialog(null, "Error Code 2: Release Date cannot be after today's date");
 				break;
 			}
 		} catch(SQLException e) {
