@@ -14,6 +14,7 @@ public class ApplicationRunner {
 	DatabaseConnectionService connector = new DatabaseConnectionService(null, null);
 	ConnectionManagementDevice cmd = new ConnectionManagementDevice(connector.getConnection());
 	AthleteManagementService ams = new AthleteManagementService(cmd);
+	TeamManagementService tms = new TeamManagementService(cmd);
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	JFrame frame = new JFrame("PQR");
 	JFrame frame2 = new JFrame("PQR Connect");
