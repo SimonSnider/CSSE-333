@@ -1,19 +1,20 @@
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
 
 import javax.swing.JOptionPane;
 
 public class AthleteManagementService {
-	private ConnectionManagementDevice cmd;
+	private Connection conn;
 	
-	public AthleteManagementService(ConnectionManagementDevice cmd) {
-		this.cmd = cmd;
+	public AthleteManagementService(Connection conn) {
+		this.conn = conn;
 	}
 
 	void InsertAthlete(String name, String bludgerHits, String grade, String pointsScored, String school, String fouls, String ejections, String injuries) {
 		try {
-			CallableStatement cs = cmd.getConnection().prepareCall("{ ? = call [Insert_Athlete](?, ?, ?, ?, ?, ?, ?, ?) }");
+			CallableStatement cs = conn.prepareCall("{ ? = call [Insert_Athlete](?, ?, ?, ?, ?, ?, ?, ?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, name);
 			cs.setString(3, bludgerHits);
@@ -40,7 +41,7 @@ public class AthleteManagementService {
 	
 	void UpdateAthlete(String athleteID, String name, String bludgerHits, String grade, String pointsScored, String school, String fouls, String ejections, String injuries) {
 		try {
-			CallableStatement cs = cmd.getConnection().prepareCall("{ ? = call [Update_Athlete](?, ?, ?, ?, ?, ?, ?, ?, ?) }");
+			CallableStatement cs = conn.prepareCall("{ ? = call [Update_Athlete](?, ?, ?, ?, ?, ?, ?, ?, ?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, athleteID);
 			cs.setString(3, name);
@@ -63,18 +64,15 @@ public class AthleteManagementService {
 			case 2:
 				JOptionPane.showMessageDialog(null, "Error Code 2: Invalid AthleteID.");
 				break;
-			case 3:
-				JOptionPane.showMessageDialog(null, "Error Code 3: Integer values cannot be negative values.");
-				break;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	void constructDeleteAthlete(String athleteID) {
+	void DeleteAthlete(String athleteID) {
 		try {
-			CallableStatement cs = cmd.getConnection().prepareCall("{ ? = call [Delete_Athlete](?) }");
+			CallableStatement cs = conn.prepareCall("{ ? = call [Delete_Athlete](?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, athleteID);
 			cs.execute();

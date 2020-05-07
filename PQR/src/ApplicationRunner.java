@@ -1,20 +1,22 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 public class ApplicationRunner {
 	DatabaseConnectionService connector = new DatabaseConnectionService(null, null);
-	ConnectionManagementDevice cmd = new ConnectionManagementDevice(connector.getConnection());
-	AthleteManagementService ams = new AthleteManagementService(cmd);
-	TeamManagementService tms = new TeamManagementService(cmd);
+	AthleteManagementService ams;
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	JFrame frame = new JFrame("PQR");
 	JFrame frame2 = new JFrame("PQR Connect");
@@ -41,7 +43,174 @@ public class ApplicationRunner {
 	}
 	
 	public void runProgram() {
+		JFrame runFrame = new JFrame("Insertion, Deletion, and Updation");
+		runFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPanel runPanel = new JPanel();
+		//ALL THIS IS ATHLETE-SPECIFIC--IT WILL HAVE OTHER OPTIONS SOON
+		JTextField runField11 = new JTextField("");
+		JTextField runField12 = new JTextField("");
+		JTextField runField13 = new JTextField("");
+		JTextField runField14 = new JTextField("");
+		JTextField runField15 = new JTextField("");
+		JTextField runField16 = new JTextField("");
+		JTextField runField17 = new JTextField("");
+		JTextField runField18 = new JTextField("");
+		JTextField runField21 = new JTextField("");
+		JTextField runField22 = new JTextField("");
+		JTextField runField23 = new JTextField("");
+		JTextField runField24 = new JTextField("");
+		JTextField runField25 = new JTextField("");
+		JTextField runField26 = new JTextField("");
+		JTextField runField27 = new JTextField("");
+		JTextField runField28 = new JTextField("");
+		JTextField runField29 = new JTextField("");
+		JTextField runField31 = new JTextField("");
+		JLabel runLabel11 = new JLabel("Name");
+		JLabel runLabel12 = new JLabel("Bludger Hits");
+		JLabel runLabel13 = new JLabel("Grade");
+		JLabel runLabel14 = new JLabel("Points Scored");
+		JLabel runLabel15 = new JLabel("School");
+		JLabel runLabel16 = new JLabel("Injuries");
+		JLabel runLabel17 = new JLabel("Fouls");
+		JLabel runLabel18 = new JLabel("Ejections");
+		JLabel runLabel21 = new JLabel("AthleteID");
+		JLabel runLabel22 = new JLabel("Name");
+		JLabel runLabel23 = new JLabel("Bludger Hits");
+		JLabel runLabel24 = new JLabel("Grade");
+		JLabel runLabel25 = new JLabel("Points Scored");
+		JLabel runLabel26 = new JLabel("School");
+		JLabel runLabel27 = new JLabel("Injuries");
+		JLabel runLabel28 = new JLabel("Fouls");
+		JLabel runLabel29 = new JLabel("Ejections");
+		JLabel runLabel31 = new JLabel("AthleteID");
+		JButton insertButton = new JButton("Insert");
+		JButton updateButton = new JButton("Update");
+		JButton deleteButton = new JButton("Delete");
+		//GridLayout gbl = new GridLayout(3,10);
+		//gbl.setHgap(40);
+		//gbl.setVgap(300);
+		runFrame.setSize(1800, 900);
+		runFrame.setLocation((int)screenSize.getWidth()/2-900, (int)screenSize.getHeight()/2-450);
+		runPanel.setSize(1400, 800);
+		//runPanel.setBorder(BorderFactory.createLineBorder(Color.black, 5));
+		runPanel.setLocation(100, 50);
+		runPanel.setLayout(null);
+		runPanel.add(insertButton);
+		runPanel.add(updateButton);
+		runPanel.add(deleteButton);
+		ArrayList<JTextField> ap = new ArrayList<JTextField>();
+		ArrayList<JLabel> al = new ArrayList<JLabel>();
+		ap.add(runField11);
+		ap.add(runField12);
+		ap.add(runField13);
+		ap.add(runField14);
+		ap.add(runField15);
+		ap.add(runField16);
+		ap.add(runField17);
+		ap.add(runField18);
+		ap.add(runField21);
+		ap.add(runField22);
+		ap.add(runField23);
+		ap.add(runField24);
+		ap.add(runField25);
+		ap.add(runField26);
+		ap.add(runField27);
+		ap.add(runField28);
+		ap.add(runField29);
+		ap.add(runField31);
+		al.add(runLabel11);
+		al.add(runLabel12);
+		al.add(runLabel13);
+		al.add(runLabel14);
+		al.add(runLabel15);
+		al.add(runLabel16);
+		al.add(runLabel17);
+		al.add(runLabel18);
+		al.add(runLabel21);
+		al.add(runLabel22);
+		al.add(runLabel23);
+		al.add(runLabel24);
+		al.add(runLabel25);
+		al.add(runLabel26);
+		al.add(runLabel27);
+		al.add(runLabel28);
+		al.add(runLabel29);
+		al.add(runLabel31);
+		for(JTextField tempField : ap) {
+			tempField.setSize(130,20);
+			runPanel.add(tempField);
+			
+		}
+		for(JLabel tempLabel : al) {
+			tempLabel.setSize(100,20);
+			runPanel.add(tempLabel);
+		}
 		
+		int i = 0;
+		int j = 0;
+		int k = 0;
+		for(JTextField tempField : ap) {
+			tempField.setEditable(true);
+			if (i <= 7) {
+				tempField.setLocation(60+(i++*170), 120);
+			}
+			else if (i <= 16) {
+				tempField.setLocation(60+(j++*170), 420);
+				i++;
+			}
+			else {
+				tempField.setLocation(60+(k++*170), 720);
+				i++;
+			}
+		}
+		i = 0;
+		j = 0;
+		k = 0;
+		for(JLabel tempLabel : al) {
+			tempLabel.setVisible(true);
+			if (i <= 7) {
+				tempLabel.setLocation(60+(i++*170), 100);
+			}
+			else if (i <= 16) {
+				tempLabel.setLocation(60+(j++*170), 400);
+				i++;
+			}
+			else {
+				tempLabel.setLocation(60+(k++*170), 700);
+				i++;
+			}
+		}
+		insertButton.setLocation(runFrame.getWidth()-200, 100);
+		insertButton.setSize(100, 40);
+		updateButton.setLocation(runFrame.getWidth()-200, 400);
+		updateButton.setSize(100, 40);
+		deleteButton.setLocation(runFrame.getWidth()-200, 700);
+		deleteButton.setSize(100, 40);
+		
+		insertButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ams.InsertAthlete(runField11.getText(), runField12.getText(), runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText(), runField17.getText(), runField18.getText());
+			}
+		});
+		
+		updateButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ams.UpdateAthlete(runField21.getText(), runField22.getText(), runField23.getText(), runField24.getText(), runField25.getText(), runField26.getText(), runField27.getText(), runField28.getText(), runField29.getText());
+			}
+		});
+		
+		deleteButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ams.DeleteAthlete(runField31.getText());
+			}
+		});
+		
+		runFrame.add(runPanel);
+		//runPanel.setVisible(true);
+		runFrame.setVisible(true);
 	}
 	
 	public void runConnect() {
@@ -71,6 +240,7 @@ public class ApplicationRunner {
 					window.add(label);
 				try {
 					boolean t = connector.connect(null, null);
+					ams = new AthleteManagementService(connector.getConnection());
 					if (t == true) {
 						timer.start();
 						label.setText("Successfully connected!");
