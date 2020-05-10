@@ -1,7 +1,9 @@
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -91,5 +93,23 @@ public class AthleteManagementService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	public ArrayList<String> getAthletes(){
+		try{
+			ArrayList<String> athletes = new ArrayList<>();
+			CallableStatement statement = this.conn.prepareCall("{? = call [Get_Athletes]()}");
+			statement.registerOutParameter(1, Types.INTEGER);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+	 			athletes.add(rs.getInt("AthleteID") + ", " + rs.getString("name"));
+			}
+			for(String current: athletes) {
+				System.out.println(current);
+			}
+			return athletes;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

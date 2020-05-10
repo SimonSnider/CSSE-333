@@ -1,18 +1,25 @@
 import java.sql.CallableStatement;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import sodabase.ui.SodaByRestaurant;
+
 public class TeamManagementService {
-	private ConnectionManagementDevice cmd;
+	private Connection conn;
 	
-public TeamManagementService(ConnectionManagementDevice cmd) {
-	this.cmd = cmd;
+public TeamManagementService(Connection connection) {
+	this.conn = connection;
 }
 void InsertTeam(String SnitchCatcherID, String County, String State, String Name) {
 	try{
-		CallableStatement stmt = cmd.getConnection().prepareCall("{? = call [Insert_Team](?, ?, ?, ?)}");
+		CallableStatement stmt = conn.prepareCall("{? = call [Insert_Team](?, ?, ?, ?)}");
 		stmt.registerOutParameter(1, Types.INTEGER);
 		stmt.setString(2, SnitchCatcherID);
 		stmt.setString(3, County);
@@ -38,7 +45,7 @@ void InsertTeam(String SnitchCatcherID, String County, String State, String Name
 }
 void UpdateTeam(String SnitchCatcherID, String County, String State, String Name, String TeamID) {
 	try{
-		CallableStatement stmt = cmd.getConnection().prepareCall("{? = call [Update_Team](?, ?, ?, ?, ?)}");
+		CallableStatement stmt = conn.prepareCall("{? = call [Update_Team](?, ?, ?, ?, ?)}");
 		stmt.registerOutParameter(1, Types.INTEGER);
 		stmt.setString(2, SnitchCatcherID);
 		stmt.setString(3, County);
@@ -69,7 +76,7 @@ void UpdateTeam(String SnitchCatcherID, String County, String State, String Name
 
 void Delete(String TeamID) {
 	try{
-		CallableStatement stmt = cmd.getConnection().prepareCall("{? = call [Delete_Team](?)}");
+		CallableStatement stmt = conn.prepareCall("{? = call [Delete_Team](?)}");
 		stmt.registerOutParameter(1, Types.INTEGER);
 		stmt.setString(2, TeamID);
 
@@ -90,6 +97,52 @@ void Delete(String TeamID) {
 		e.printStackTrace();
 	}
 }
+
+public ArrayList<String> getTeams(){
+	try{
+		ArrayList<String> teams = new ArrayList<>();
+		CallableStatement statement = this.conn.prepareCall("{? = call [Get_Teams]()}");
+		statement.registerOutParameter(1, Types.INTEGER);
+		ResultSet rs = statement.executeQuery();
+		while(rs.next()) {
+ 			teams.add(rs.getInt("TeamID") + ", " + rs.getString("name"));
+		}
+		for(String current: teams) {
+			System.out.println(current);
+		}
+		return teams;
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+	return null;
+	
+	
+	
+	
+}
+
+//private ArrayList<SodaByRestaurant> parseResults(ResultSet rs) {
+//	try {
+//		ArrayList<SodaByRestaurant> sodasByRestaurants = new ArrayList<SodaByRestaurant>();
+//		int restNameIndex = rs.findColumn("Restaurant");
+//		int sodaNameIndex = rs.findColumn("Soda");
+//		int manfIndex = rs.findColumn("Manufacturer");
+//		int restContactIndex = rs.findColumn("RestaurantContact");
+//		int priceIndex = rs.findColumn("Price");
+//		while (rs.next()) {
+//			sodasByRestaurants.add(new SodaByRestaurant(rs.getString(restNameIndex), rs.getString(sodaNameIndex),
+//					rs.getString(manfIndex), rs.getString(restContactIndex), rs.getDouble(priceIndex)));
+//		}
+//		System.out.println(sodasByRestaurants.size());
+//		return sodasByRestaurants;
+//	} catch (SQLException ex) {
+//		JOptionPane.showMessageDialog(null,
+//				"An error ocurred while retrieving sodas by restaurants. See printed stack trace.");
+//		ex.printStackTrace();
+//		return new ArrayList<SodaByRestaurant>();
+//	}
+//
+//}
 
 
 }
