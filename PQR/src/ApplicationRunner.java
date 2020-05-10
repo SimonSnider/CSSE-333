@@ -9,6 +9,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -17,6 +19,9 @@ import javax.swing.border.Border;
 public class ApplicationRunner {
 	DatabaseConnectionService connector = new DatabaseConnectionService(null, null);
 	AthleteManagementService ams;
+	BroomstickManagementService bms;
+	MatchManagementService mms;
+	TeamManagementService tms;
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	JFrame frame = new JFrame("PQR");
 	JFrame frame2 = new JFrame("PQR Connect");
@@ -42,64 +47,86 @@ public class ApplicationRunner {
 		componentAlignY(comp, flty);
 	}
 	
+	//Initialization of variables
+	JFrame runFrame = new JFrame("Insertion, Deletion, and Updation");
+	JPanel runPanel = new JPanel();
+	String[] selects = {"Athlete", "Team", "Match", "Broomstick"};
+	JComboBox runBox = new JComboBox(selects);
+	JTextField runField11 = new JTextField("");
+	JTextField runField12 = new JTextField("");
+	JTextField runField13 = new JTextField("");
+	JTextField runField14 = new JTextField("");
+	JTextField runField15 = new JTextField("");
+	JTextField runField16 = new JTextField("");
+	JTextField runField17 = new JTextField("");
+	JTextField runField18 = new JTextField("");
+	JTextField runField21 = new JTextField("");
+	JTextField runField22 = new JTextField("");
+	JTextField runField23 = new JTextField("");
+	JTextField runField24 = new JTextField("");
+	JTextField runField25 = new JTextField("");
+	JTextField runField26 = new JTextField("");
+	JTextField runField27 = new JTextField("");
+	JTextField runField28 = new JTextField("");
+	JTextField runField31 = new JTextField("");
+	JTextField runField32 = new JTextField("");
+	JTextField runField33 = new JTextField("");
+	JTextField runField34 = new JTextField("");
+	JTextField runField35 = new JTextField("");
+	JLabel runLabel11 = new JLabel("");
+	JLabel runLabel12 = new JLabel("");
+	JLabel runLabel13 = new JLabel("");
+	JLabel runLabel14 = new JLabel("");
+	JLabel runLabel15 = new JLabel("");
+	JLabel runLabel16 = new JLabel("");
+	JLabel runLabel17 = new JLabel("");
+	JLabel runLabel18 = new JLabel("");
+	JLabel runLabel21 = new JLabel("");
+	JLabel runLabel22 = new JLabel("");
+	JLabel runLabel23 = new JLabel("");
+	JLabel runLabel24 = new JLabel("");
+	JLabel runLabel25 = new JLabel("");
+	JLabel runLabel26 = new JLabel("");
+	JLabel runLabel27 = new JLabel("");
+	JLabel runLabel28 = new JLabel("");
+	JLabel runLabel31 = new JLabel("");
+	JLabel runLabel32 = new JLabel("");
+	JLabel runLabel33 = new JLabel("");
+	JLabel runLabel34 = new JLabel("");
+	JLabel runLabel35 = new JLabel("");
+	//All purpose boxes for use in place of labels
+	JComboBox runBox1 = new JComboBox();
+	JComboBox runBox2 = new JComboBox();
+	JComboBox runBox3 = new JComboBox();
+	JComboBox runBox4 = new JComboBox();
+	JComboBox runBox5 = new JComboBox();
+	JComboBox runBox6 = new JComboBox();
+	JComboBox runBox7 = new JComboBox();
+	JComboBox runBox8 = new JComboBox();
+	JComboBox runBox9 = new JComboBox();
+	JComboBox runBox10 = new JComboBox();
+	JButton insertButton = new JButton("Insert");
+	JButton updateButton = new JButton("Update");
+	JButton deleteButton = new JButton("Delete");
+	ArrayList<JTextField> ap = new ArrayList<JTextField>();
+	ArrayList<JLabel> al = new ArrayList<JLabel>();
+	ArrayList<JComboBox> acb = new ArrayList<JComboBox>();
+	String athleteFields[] = {"Name", "Bludger Hits", "Grade", "Points Scored", "School", "Injuries", "Fouls", "Ejections", "Name, ID", "Bludger Hits", "Grade", "Points Scored", "School", "Injuries", "Fouls", "Ejections", "Name, ID"};
+
 	public void runProgram() {
-		JFrame runFrame = new JFrame("Insertion, Deletion, and Updation");
 		runFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JPanel runPanel = new JPanel();
-		//ALL THIS IS ATHLETE-SPECIFIC--IT WILL HAVE OTHER OPTIONS SOON
-		JTextField runField11 = new JTextField("");
-		JTextField runField12 = new JTextField("");
-		JTextField runField13 = new JTextField("");
-		JTextField runField14 = new JTextField("");
-		JTextField runField15 = new JTextField("");
-		JTextField runField16 = new JTextField("");
-		JTextField runField17 = new JTextField("");
-		JTextField runField18 = new JTextField("");
-		JTextField runField21 = new JTextField("");
-		JTextField runField22 = new JTextField("");
-		JTextField runField23 = new JTextField("");
-		JTextField runField24 = new JTextField("");
-		JTextField runField25 = new JTextField("");
-		JTextField runField26 = new JTextField("");
-		JTextField runField27 = new JTextField("");
-		JTextField runField28 = new JTextField("");
-		JTextField runField29 = new JTextField("");
-		JTextField runField31 = new JTextField("");
-		JLabel runLabel11 = new JLabel("Name");
-		JLabel runLabel12 = new JLabel("Bludger Hits");
-		JLabel runLabel13 = new JLabel("Grade");
-		JLabel runLabel14 = new JLabel("Points Scored");
-		JLabel runLabel15 = new JLabel("School");
-		JLabel runLabel16 = new JLabel("Injuries");
-		JLabel runLabel17 = new JLabel("Fouls");
-		JLabel runLabel18 = new JLabel("Ejections");
-		JLabel runLabel21 = new JLabel("AthleteID");
-		JLabel runLabel22 = new JLabel("Name");
-		JLabel runLabel23 = new JLabel("Bludger Hits");
-		JLabel runLabel24 = new JLabel("Grade");
-		JLabel runLabel25 = new JLabel("Points Scored");
-		JLabel runLabel26 = new JLabel("School");
-		JLabel runLabel27 = new JLabel("Injuries");
-		JLabel runLabel28 = new JLabel("Fouls");
-		JLabel runLabel29 = new JLabel("Ejections");
-		JLabel runLabel31 = new JLabel("AthleteID");
-		JButton insertButton = new JButton("Insert");
-		JButton updateButton = new JButton("Update");
-		JButton deleteButton = new JButton("Delete");
-		//GridLayout gbl = new GridLayout(3,10);
-		//gbl.setHgap(40);
-		//gbl.setVgap(300);
+		runBox.setSelectedItem("Athlete");
+		
+		//General
 		runFrame.setSize(1800, 900);
 		runFrame.setLocation((int)screenSize.getWidth()/2-900, (int)screenSize.getHeight()/2-450);
 		runPanel.setSize(1400, 800);
-		//runPanel.setBorder(BorderFactory.createLineBorder(Color.black, 5));
 		runPanel.setLocation(100, 50);
 		runPanel.setLayout(null);
 		runPanel.add(insertButton);
 		runPanel.add(updateButton);
 		runPanel.add(deleteButton);
-		ArrayList<JTextField> ap = new ArrayList<JTextField>();
-		ArrayList<JLabel> al = new ArrayList<JLabel>();
+		runPanel.add(runBox);
 		ap.add(runField11);
 		ap.add(runField12);
 		ap.add(runField13);
@@ -116,8 +143,11 @@ public class ApplicationRunner {
 		ap.add(runField26);
 		ap.add(runField27);
 		ap.add(runField28);
-		ap.add(runField29);
 		ap.add(runField31);
+		ap.add(runField32);
+		ap.add(runField33);
+		ap.add(runField34);
+		ap.add(runField35);
 		al.add(runLabel11);
 		al.add(runLabel12);
 		al.add(runLabel13);
@@ -134,18 +164,165 @@ public class ApplicationRunner {
 		al.add(runLabel26);
 		al.add(runLabel27);
 		al.add(runLabel28);
-		al.add(runLabel29);
 		al.add(runLabel31);
+		al.add(runLabel32);
+		al.add(runLabel33);
+		al.add(runLabel34);
+		al.add(runLabel35);
+		acb.add(runBox1);
+		acb.add(runBox2);
+		acb.add(runBox3);
+		acb.add(runBox4);
+		acb.add(runBox5);
+		acb.add(runBox6);
+		acb.add(runBox7);
+		acb.add(runBox8);
+		acb.add(runBox9);
+		acb.add(runBox10);
+		
 		for(JTextField tempField : ap) {
 			tempField.setSize(130,20);
 			runPanel.add(tempField);
-			
+			tempField.setLocation(-500,-500);
 		}
 		for(JLabel tempLabel : al) {
 			tempLabel.setSize(100,20);
 			runPanel.add(tempLabel);
+			tempLabel.setLocation(-500,-500);
+		}
+		for(JComboBox tempBox : acb) {
+			tempBox.setSize(130,20);
+			runPanel.add(tempBox);
+			tempBox.setLocation(-500,-500);
 		}
 		
+		
+		//General
+		insertButton.setLocation(runFrame.getWidth()-200, 100);
+		insertButton.setSize(100, 40);
+		updateButton.setLocation(runFrame.getWidth()-200, 400);
+		updateButton.setSize(100, 40);
+		deleteButton.setLocation(runFrame.getWidth()-200, 700);
+		deleteButton.setSize(100, 40);
+		runBox.setLocation(100 ,50);
+		runBox.setSize(130, 20);
+		
+		insertButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				switch ((String)runBox.getSelectedItem()) {
+				case "Athlete":
+					ams.InsertAthlete(runField11.getText(), runField12.getText(), runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText(), runField17.getText(), runField18.getText());
+					break;
+				case "Team":
+					runTeamInput();
+					break;
+				case "Match":
+					runMatchInput();
+					break;
+				case "Broomstick":
+					runBroomstickInput();
+					break;
+				default:
+					JOptionPane.showMessageDialog(null, "Somehow your selection box has managed to evade the range of selectable options. Wpw. Impressive.");	
+				}
+				ams.InsertAthlete(runField11.getText(), runField12.getText(), runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText(), runField17.getText(), runField18.getText());
+			}
+		});
+		
+		updateButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				switch ((String)runBox.getSelectedItem()) {
+				case "Athlete":
+					String temp = (String)acb.get(0).getSelectedItem();
+					int pos = temp.indexOf(",", 0);
+					String ID = temp.substring(0,pos);
+					String Name = temp.substring(pos);
+					ams.UpdateAthlete(ID, Name, runField22.getText(), runField23.getText(), runField24.getText(), runField25.getText(), runField26.getText(), runField27.getText(), runField28.getText());
+					break;
+				case "Team":
+					runTeamInput();
+					break;
+				case "Match":
+					runMatchInput();
+					break;
+				case "Broomstick":
+					runBroomstickInput();
+					break;
+				default:
+					JOptionPane.showMessageDialog(null, "Somehow your selection box has managed to evade the range of selectable options. Wpw. Impressive.");	
+				}
+			}
+		});
+		
+		deleteButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				switch ((String)runBox.getSelectedItem()) {
+				case "Athlete":
+					String temp = (String)acb.get(1).getSelectedItem();
+					int pos = temp.indexOf(",", 0);
+					String ID = temp.substring(0,pos);
+					ams.DeleteAthlete(ID);
+					break;
+				case "Team":
+					runTeamInput();
+					break;
+				case "Match":
+					runMatchInput();
+					break;
+				case "Broomstick":
+					runBroomstickInput();
+					break;
+				default:
+					JOptionPane.showMessageDialog(null, "Somehow your selection box has managed to evade the range of selectable options. Wpw. Impressive.");	
+				}
+				
+			}
+		});
+		runBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				switch ((String)runBox.getSelectedItem()) {
+				case "Athlete":
+					runAthleteInput();
+					break;
+				case "Team":
+					runTeamInput();
+					break;
+				case "Match":
+					runMatchInput();
+					break;
+				case "Broomstick":
+					runBroomstickInput();
+					break;
+				default:
+					JOptionPane.showMessageDialog(null, "Somehow your selection box has managed to evade the range of selectable options. Wpw. Impressive.");	
+				}
+			}
+		});
+		
+		runFrame.add(runPanel);
+		runFrame.setVisible(true);
+		runAthleteInput();
+	}
+	
+	public void runAthleteInput() {
+		//JComboBox nameIDBox = null;
+		ArrayList<String> temps = ams.getNameAndIndex();
+		Object[] toArr = temps.toArray();
+		String[] holder = new String[temps.size()];
+		int t = 0;
+		for(Object tempObject : toArr) {
+			runBox1.addItem((String)tempObject);
+			runBox2.addItem((String)tempObject);
+		}
+		String athleteFields[] = {"Name", "Bludger Hits", "Grade", "Points Scored", "School", "Injuries", "Fouls", "Ejections", "Name, ID", "Bludger Hits", "Grade", "Points Scored", "School", "Injuries", "Fouls", "Ejections", "Name, ID"};
+		for(int a = 0; a < 17; a++) {
+			al.get(a).setText(athleteFields[a]);
+		}
+		//Athlete-Specific (for other teams, just run place all excess outside the bounds of the screen
 		int i = 0;
 		int j = 0;
 		int k = 0;
@@ -154,13 +331,40 @@ public class ApplicationRunner {
 			if (i <= 7) {
 				tempField.setLocation(60+(i++*170), 120);
 			}
-			else if (i <= 16) {
-				tempField.setLocation(60+(j++*170), 420);
-				i++;
+			else if (i <= 15) {
+				if (i == 8) {
+					runBox1.setLocation(60+(j++*170),420); //0 box is a nameID box
+					runBox1.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String temp = (String)acb.get(0).getSelectedItem();
+							int pos = temp.indexOf(",", 0);
+							String ID = temp.substring(0,pos);
+							String[] temparr = {"BludgerHits", "Grade", "PointsScored", "School", "Injuries", "Fouls", "Ejections"};
+							ArrayList<String> tempInfo = ams.getInfoFromID(ID);
+							runField22.setText(tempInfo.get(0));
+							runField23.setText(tempInfo.get(1));
+							runField24.setText(tempInfo.get(2));
+							runField25.setText(tempInfo.get(3));
+							runField26.setText(tempInfo.get(4));
+							runField27.setText(tempInfo.get(5));
+							runField28.setText(tempInfo.get(6));
+						}
+					});
+					i++;
+				} else {
+					tempField.setLocation(60+(j++*170), 420);
+					i++;
+				}
 			}
-			else {
-				tempField.setLocation(60+(k++*170), 720);
-				i++;
+			else if (i <= 16) {
+				if (i == 16) {
+					runBox2.setLocation(60+(k++*170), 720); //1 box is a nameID box
+					i++;
+				} else {
+					tempField.setLocation(60+(k++*170), 720);
+					i++;
+				}
 			}
 		}
 		i = 0;
@@ -171,46 +375,27 @@ public class ApplicationRunner {
 			if (i <= 7) {
 				tempLabel.setLocation(60+(i++*170), 100);
 			}
-			else if (i <= 16) {
+			else if (i <= 15) {
 				tempLabel.setLocation(60+(j++*170), 400);
 				i++;
 			}
-			else {
+			else if (i <= 16) {
 				tempLabel.setLocation(60+(k++*170), 700);
 				i++;
 			}
 		}
-		insertButton.setLocation(runFrame.getWidth()-200, 100);
-		insertButton.setSize(100, 40);
-		updateButton.setLocation(runFrame.getWidth()-200, 400);
-		updateButton.setSize(100, 40);
-		deleteButton.setLocation(runFrame.getWidth()-200, 700);
-		deleteButton.setSize(100, 40);
-		
-		insertButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ams.InsertAthlete(runField11.getText(), runField12.getText(), runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText(), runField17.getText(), runField18.getText());
-			}
-		});
-		
-		updateButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ams.UpdateAthlete(runField21.getText(), runField22.getText(), runField23.getText(), runField24.getText(), runField25.getText(), runField26.getText(), runField27.getText(), runField28.getText(), runField29.getText());
-			}
-		});
-		
-		deleteButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ams.DeleteAthlete(runField31.getText());
-			}
-		});
-		
-		runFrame.add(runPanel);
-		//runPanel.setVisible(true);
-		runFrame.setVisible(true);
+	}
+	
+	public void runTeamInput() {
+		JOptionPane.showMessageDialog(null, "Running runTeamInput()");	
+	}
+	
+	public void runMatchInput() {
+		JOptionPane.showMessageDialog(null, "Running runMatchInput()");	
+	}
+	
+	public void runBroomstickInput() {
+		JOptionPane.showMessageDialog(null, "Running runBroomstickInput()");	
 	}
 	
 	public void runConnect() {
