@@ -1,7 +1,9 @@
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -82,5 +84,25 @@ public class MatchManagementService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	public ArrayList<String> getMatches(){
+		try{
+			ArrayList<String> matches = new ArrayList<>();
+			CallableStatement statement = this.conn.prepareCall("{? = call [Get_Matches]()}");
+			statement.registerOutParameter(1, Types.INTEGER);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+	 			matches.add(rs.getString("HomeTeam") + ", " + rs.getString("AwayTeam") + ", " + rs.getDate("Date"));
+			}
+			for(String current: matches) {
+				System.out.println(current);
+			}
+			return matches;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

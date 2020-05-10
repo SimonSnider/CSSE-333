@@ -19,9 +19,9 @@ import javax.swing.border.Border;
 public class ApplicationRunner {
 	DatabaseConnectionService connector = new DatabaseConnectionService(null, null);
 	AthleteManagementService ams;
+	TeamManagementService tms; 
+	MatchManagementService mms; 
 	BroomstickManagementService bms;
-	MatchManagementService mms;
-	TeamManagementService tms;
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	JFrame frame = new JFrame("PQR");
 	JFrame frame2 = new JFrame("PQR Connect");
@@ -426,6 +426,9 @@ public class ApplicationRunner {
 				try {
 					boolean t = connector.connect(null, null);
 					ams = new AthleteManagementService(connector.getConnection());
+					tms = new TeamManagementService(connector.getConnection());
+					mms = new MatchManagementService(connector.getConnection());
+					bms = new BroomstickManagementService(connector.getConnection());
 					if (t == true) {
 						timer.start();
 						label.setText("Successfully connected!");
@@ -462,6 +465,7 @@ public class ApplicationRunner {
 	
 	public void runApplication(String[] args) {
 		runConnect();
+	
 		/*frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		button.addActionListener(new ActionListener() {
 			@Override

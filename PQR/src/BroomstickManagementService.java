@@ -1,20 +1,23 @@
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
 import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
 
 public class BroomstickManagementService {
-	private ConnectionManagementDevice cmd;
+	private Connection conn;
 	
-	public BroomstickManagementService(ConnectionManagementDevice cmd) {
-		this.cmd = cmd;
+	public BroomstickManagementService(Connection conn) {
+		this.conn = conn;
 	}
 	
 	void InsertBroomstick(String make, String model, String date) {
 		try {
-			CallableStatement cs = cmd.getConnection().prepareCall("{? = call [Insert_Broomstick](?, ?, ?)}");
+			CallableStatement cs = this.conn.prepareCall("{? = call [Insert_Broomstick](?, ?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, make);
 			cs.setString(3, model);
@@ -40,7 +43,7 @@ public class BroomstickManagementService {
 	
 	void UpdateBroomstick(String BroomstickID, String make, String model, String date) {
 		try {
-			CallableStatement cs = cmd.getConnection().prepareCall("{? = call [Update_Broomstick](?, ?, ?, ?)}");
+			CallableStatement cs = conn.prepareCall("{? = call [Update_Broomstick](?, ?, ?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, BroomstickID);
 			cs.setString(3, make);
@@ -64,7 +67,7 @@ public class BroomstickManagementService {
 	
 	void DeleteBroomstick(String BroomstickID) {
 		try {
-			CallableStatement cs = cmd.getConnection().prepareCall("{? = call [Delete_Broomstick](?)}");
+			CallableStatement cs = this.conn.prepareCall("{? = call [Delete_Broomstick](?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, BroomstickID);
 			cs.execute();
@@ -81,5 +84,23 @@ public class BroomstickManagementService {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	public ArrayList<String> getBroomsticks(){
+		try{
+			ArrayList<String> broomsticks = new ArrayList<>();
+			CallableStatement statement = this.conn.prepareCall("{? = call [Get_Broomsticks]()}");
+			statement.registerOutParameter(1, Types.INTEGER);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+	 			broomsticks.add(rs.getString("Make") + ", " + rs.getString("Model"));
+			} 
+			for(String current: broomsticks) {
+				System.out.println(current);
+			}
+			return broomsticks;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
