@@ -213,20 +213,30 @@ public class ApplicationRunner {
 				switch ((String)runBox.getSelectedItem()) {
 				case "Athlete":
 					ams.InsertAthlete(runField11.getText(), runField12.getText(), runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText(), runField17.getText(), runField18.getText());
+					runAthleteInput();
 					break;
 				case "Team":
+					tms.InsertTeam(runField12.getText(), runField13.getText(), runField11.getText());
 					runTeamInput();
 					break;
 				case "Match":
+					String temp = (String)acb.get(2).getSelectedItem();
+					int pos = temp.indexOf(",", 0);
+					String ID2 = temp.substring(0,pos);
+					temp = (String)acb.get(3).getSelectedItem();
+					pos = temp.indexOf(",", 0);
+					String ID3 = temp.substring(0,pos);
+					mms.InsertMatch(ID2, ID3, runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText());
 					runMatchInput();
 					break;
 				case "Broomstick":
+					bms.InsertBroomstick(runField11.getText(), runField12.getText(), runField13.getText());
 					runBroomstickInput();
 					break;
 				default:
 					JOptionPane.showMessageDialog(null, "Somehow your selection box has managed to evade the range of selectable options. Wpw. Impressive.");	
 				}
-				ams.InsertAthlete(runField11.getText(), runField12.getText(), runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText(), runField17.getText(), runField18.getText());
+				//ams.InsertAthlete(runField11.getText(), runField12.getText(), runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText(), runField17.getText(), runField18.getText());
 			}
 		});
 		
@@ -238,16 +248,37 @@ public class ApplicationRunner {
 					String temp = (String)acb.get(0).getSelectedItem();
 					int pos = temp.indexOf(",", 0);
 					String ID = temp.substring(0,pos);
-					String Name = temp.substring(pos);
+					String Name = temp.substring(pos+1);
 					ams.UpdateAthlete(ID, Name, runField22.getText(), runField23.getText(), runField24.getText(), runField25.getText(), runField26.getText(), runField27.getText(), runField28.getText());
+					runAthleteInput();
 					break;
 				case "Team":
+					temp = (String)acb.get(0).getSelectedItem();
+					pos = temp.indexOf(",", 0);
+					ID = temp.substring(0,pos);
+					Name = temp.substring(pos+1);
+					tms.UpdateTeam(runField15.getText(), runField16.getText(), Name, ID);
 					runTeamInput();
 					break;
 				case "Match":
+					temp = (String)acb.get(0).getSelectedItem();
+					pos = temp.indexOf(",", 0);
+					ID = temp.substring(0,pos);
+					Name = temp.substring(pos+1);
+					temp = (String)acb.get(4).getSelectedItem();
+					pos = temp.indexOf(",", 0);
+					String ID2 = temp.substring(0,pos);
+					temp = (String)acb.get(5).getSelectedItem();
+					pos = temp.indexOf(",", 0);
+					String ID3 = temp.substring(0,pos);
+					mms.UpdateMatch(ID, ID2, ID3, runField22.getText(), runField23.getText(), runField24.getText(), runField25.getText());
 					runMatchInput();
 					break;
 				case "Broomstick":
+					temp = (String)acb.get(0).getSelectedItem();
+					pos = temp.indexOf(",", 0);
+					ID = temp.substring(0,pos);
+					bms.UpdateBroomstick(ID, runField15.getText(), runField16.getText(), runField17.getText());
 					runBroomstickInput();
 					break;
 				default:
@@ -265,14 +296,27 @@ public class ApplicationRunner {
 					int pos = temp.indexOf(",", 0);
 					String ID = temp.substring(0,pos);
 					ams.DeleteAthlete(ID);
+					runAthleteInput();
 					break;
 				case "Team":
+					temp = (String)acb.get(1).getSelectedItem();
+					pos = temp.indexOf(",", 0);
+					ID = temp.substring(0,pos);
+					tms.Delete(ID);
 					runTeamInput();
 					break;
 				case "Match":
+					temp = (String)acb.get(1).getSelectedItem();
+					pos = temp.indexOf(",", 0);
+					ID = temp.substring(0,pos);
+					mms.DeleteMatch(ID);
 					runMatchInput();
 					break;
 				case "Broomstick":
+					temp = (String)acb.get(1).getSelectedItem();
+					pos = temp.indexOf(",", 0);
+					ID = temp.substring(0,pos);
+					bms.DeleteBroomstick(ID);
 					runBroomstickInput();
 					break;
 				default:
@@ -308,8 +352,27 @@ public class ApplicationRunner {
 		runAthleteInput();
 	}
 	
+	public void clearAllElements() {
+		for(JComboBox tempBox : acb) {
+			ActionListener[] al = tempBox.getActionListeners();
+			for(ActionListener tempAl : al) {
+				tempBox.removeActionListener(tempAl);
+			}
+			tempBox.removeAllItems();
+			tempBox.setLocation(-5000, 5000);
+		}
+		for(JLabel tempLabel : al) {
+			tempLabel.setText("");
+			tempLabel.setLocation(-5000,5000);
+		}
+		for(JTextField tempField : ap) {
+			tempField.setText("");
+			tempField.setLocation(-5000,5000);
+		}
+	}
+	
 	public void runAthleteInput() {
-		//JComboBox nameIDBox = null;
+		clearAllElements();
 		ArrayList<String> temps = ams.getNameAndIndex();
 		Object[] toArr = temps.toArray();
 		String[] holder = new String[temps.size()];
@@ -387,15 +450,265 @@ public class ApplicationRunner {
 	}
 	
 	public void runTeamInput() {
-		JOptionPane.showMessageDialog(null, "Running runTeamInput()");	
+		clearAllElements();
+		ArrayList<String> temps = tms.getNameAndIndex();
+		Object[] toArr = temps.toArray();
+		String[] holder = new String[temps.size()];
+		int t = 0;
+		for(Object tempObject : toArr) {
+			runBox1.addItem((String)tempObject);
+			runBox2.addItem((String)tempObject);
+		}
+		String teamFields[] = {"Name", "County", "State", "Name, ID", "County", "State", "Name, ID"};
+		for(int a = 0; a < 7; a++) {
+			al.get(a).setText(teamFields[a]);
+		}
+		int i = 0;
+		int j = 0;
+		int k = 0;
+		for(JTextField tempField : ap) {
+			tempField.setEditable(true);
+			if (i <= 2) {
+				tempField.setLocation(60+(i++*170), 120);
+			}
+			else if (i <= 5) {
+				if (i == 3) {
+					runBox1.setLocation(60+(j++*170),420); //0 box is a nameID box
+					runBox1.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String temp = (String)acb.get(0).getSelectedItem();
+							int pos = temp.indexOf(",", 0);
+							String ID = temp.substring(0,pos);
+							//String[] temparr = {"BludgerHits", "Grade", "PointsScored", "School", "Injuries", "Fouls", "Ejections"};
+							ArrayList<String> tempInfo = tms.getInfoFromID(ID);
+							runField16.setText(tempInfo.get(0));
+							runField15.setText(tempInfo.get(1));
+						}
+					});
+					i++;
+				} else {
+					tempField.setLocation(60+(j++*170), 420);
+					i++;
+				}
+			}
+			else if (i <= 6) {
+				if (i == 6) {
+					runBox2.setLocation(60+(k++*170), 720); //1 box is a nameID box
+					i++;
+				} else {
+					tempField.setLocation(60+(k++*170), 720);
+					i++;
+				}
+			}
+			else {
+				tempField.setLocation(-5000, 5000);
+			}
+		}
+		i = 0;
+		j = 0;
+		k = 0;
+		for(JLabel tempLabel : al) {
+			tempLabel.setVisible(true);
+			if (i <= 2) {
+				tempLabel.setLocation(60+(i++*170), 100);
+			}
+			else if (i <= 5) {
+				tempLabel.setLocation(60+(j++*170), 400);
+				i++;
+			}
+			else if (i <= 6) {
+				tempLabel.setLocation(60+(k++*170), 700);
+				i++;
+			}
+			else {
+				tempLabel.setLocation(-5000, 5000);
+			}
+		}
 	}
 	
 	public void runMatchInput() {
-		JOptionPane.showMessageDialog(null, "Running runMatchInput()");	
+		clearAllElements();
+		ArrayList<String> temps = mms.getMatches();
+		Object[] toArr = temps.toArray();
+		String[] holder = new String[temps.size()];
+		int t = 0;
+		for(Object tempObject : toArr) {
+			runBox1.addItem((String)tempObject);
+			runBox2.addItem((String)tempObject);
+		}
+		ArrayList<String> tempsT = tms.getNameAndIndex();
+		Object[] toArrT = tempsT.toArray();
+		String[] holderT = new String[tempsT.size()];
+		int T = 0;
+		for(Object tempObject : toArrT) {
+			runBox3.addItem((String)tempObject);
+			runBox4.addItem((String)tempObject);
+			runBox5.addItem((String)tempObject);
+			runBox6.addItem((String)tempObject);
+		}
+		String matchFields[] = {"Home Team", "Away Team", "Home Score", "Away Score", "Date", "Stadium", "Matches", "Home Team", "Away Team", "Home Score", "Away Score", "Date", "Stadium", "Matches"};
+		for(int a = 0; a < 14; a++) {
+			al.get(a).setText(matchFields[a]);
+		}
+		//Athlete-Specific (for other teams, just run place all excess outside the bounds of the screen
+		int i = 0;
+		int j = 0;
+		int k = 0;
+		for(JTextField tempField : ap) {
+			tempField.setEditable(true);
+			if (i <= 5) {
+				if (i == 0) {
+					runBox3.setLocation(60+(i++*170),120);
+				}
+				else if (i == 1) {
+					runBox4.setLocation(60+(i++*170),120);
+				}
+				else{
+					tempField.setLocation(60+(i++*170), 120);
+				}
+			}
+			else if (i <= 12) {
+				if (i == 6) {
+					runBox1.setLocation(60+(j++*170),420); //0 box is a nameID box
+					runBox1.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String temp = (String)acb.get(0).getSelectedItem();
+							int pos = temp.indexOf(",", 0);
+							String ID = temp.substring(0,pos);
+							//String[] temparr = {"BludgerHits", "Grade", "PointsScored", "School", "Injuries", "Fouls", "Ejections"};
+							ArrayList<String> tempInfo = mms.getInfoFromID(ID);
+							runBox5.setSelectedItem(tempInfo.get(6)+","+tempInfo.get(0)); //HomeTeamID
+							runBox6.setSelectedItem(tempInfo.get(7)+","+tempInfo.get(1)); //AwayTeamID
+							runField22.setText(tempInfo.get(2));
+							runField23.setText(tempInfo.get(3));
+							runField24.setText(tempInfo.get(4));
+							runField25.setText(tempInfo.get(5));
+						}
+					});
+					i++;
+				}
+				else if (i == 7) {
+					runBox5.setLocation(60+(j++*170),420);
+					i++;
+				}
+				else if (i == 8) {
+					runBox6.setLocation(60+(j++*170),420);
+					i++;
+				}
+				else {
+					tempField.setLocation(60+(j++*170), 420);
+					i++;
+				}
+			}
+			else if (i <= 13) {
+				if (i == 13) {
+					runBox2.setLocation(60+(k++*170), 720); //1 box is a nameID box
+					i++;
+				} else {
+					tempField.setLocation(60+(k++*170), 720);
+					i++;
+				}
+			}
+			else {
+				tempField.setLocation(-5000, 5000);
+			}
+		}
+		i = 0;
+		j = 0;
+		k = 0;
+		for(JLabel tempLabel : al) {
+			tempLabel.setVisible(true);
+			if (i <= 5) {
+				tempLabel.setLocation(60+(i++*170), 100);
+			}
+			else if (i <= 12) {
+				tempLabel.setLocation(60+(j++*170), 400);
+				i++;
+			}
+			else if (i <= 13) {
+				tempLabel.setLocation(60+(k++*170), 700);
+				i++;
+			}
+			else {
+				tempLabel.setLocation(-5000, 5000);
+			}
+		}
 	}
 	
 	public void runBroomstickInput() {
-		JOptionPane.showMessageDialog(null, "Running runBroomstickInput()");	
+		clearAllElements();
+		ArrayList<String> temps = bms.getBroomsticks();
+		Object[] toArr = temps.toArray();
+		String[] holder = new String[temps.size()];
+		int t = 0;
+		for(Object tempObject : toArr) {
+			runBox1.addItem((String)tempObject);
+			runBox2.addItem((String)tempObject);
+		}
+		String broomstickFields[] = {"Make", "Model", "Release Date", "Broomsticks", "Make", "Model", "Release Date", "Broomsticks"};
+		for(int a = 0; a < 8; a++) {
+			al.get(a).setText(broomstickFields[a]);
+		}
+		//Athlete-Specific (for other teams, just run place all excess outside the bounds of the screen
+		int i = 0;
+		int j = 0;
+		int k = 0;
+		for(JTextField tempField : ap) {
+			tempField.setEditable(true);
+			if (i <= 2) {
+				tempField.setLocation(60+(i++*170), 120);
+			}
+			else if (i <= 6) {
+				if (i == 3) {
+					runBox1.setLocation(60+(j++*170),420); //0 box is a nameID box
+					runBox1.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String temp = (String)acb.get(0).getSelectedItem();
+							int pos = temp.indexOf(",", 0);
+							String ID = temp.substring(0,pos);
+							//String[] temparr = {"BludgerHits", "Grade", "PointsScored", "School", "Injuries", "Fouls", "Ejections"};
+							ArrayList<String> tempInfo = bms.getInfoFromID(ID);
+							runField15.setText(tempInfo.get(0));
+							runField16.setText(tempInfo.get(1));
+							runField17.setText(tempInfo.get(2));
+						}
+					});
+					i++;
+				} else {
+					tempField.setLocation(60+(j++*170), 420);
+					i++;
+				}
+			}
+			else if (i <= 7) {
+				if (i == 7) {
+					runBox2.setLocation(60+(k++*170), 720); //1 box is a nameID box
+					i++;
+				} else {
+					tempField.setLocation(60+(k++*170), 720);
+					i++;
+				}
+			}
+		}
+		i = 0;
+		j = 0;
+		k = 0;
+		for(JLabel tempLabel : al) {
+			tempLabel.setVisible(true);
+			if (i <= 2) {
+				tempLabel.setLocation(60+(i++*170), 100);
+			}
+			else if (i <= 6) {
+				tempLabel.setLocation(60+(j++*170), 400);
+				i++;
+			}
+			else if (i <= 7) {
+				tempLabel.setLocation(60+(k++*170), 700);
+				i++;
+			}
+		}
 	}
 	
 	public void runConnect() {

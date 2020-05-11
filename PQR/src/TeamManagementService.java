@@ -17,15 +17,14 @@ public class TeamManagementService {
 public TeamManagementService(Connection connection) {
 	this.conn = connection;
 }
-void InsertTeam(String SnitchCatcherID, String County, String State, String Name) {
+void InsertTeam(String County, String State, String Name) {
 	try{
-		CallableStatement stmt = conn.prepareCall("{? = call [Insert_Team](?, ?, ?, ?)}");
+		CallableStatement stmt = conn.prepareCall("{? = call [Insert_Team](?, ?, ?)}");
 		stmt.registerOutParameter(1, Types.INTEGER);
-		stmt.setString(2, SnitchCatcherID);
-		stmt.setString(3, County);
-		stmt.setString(4, State);
-		stmt.setString(5, Name);
-		
+		stmt.setString(2, County);
+		stmt.setString(3, State);
+		stmt.setString(4, Name);
+		stmt.execute();
 		int status = Integer.parseInt(stmt.getString(1));
 		switch(status){
 		case 0:
@@ -34,25 +33,21 @@ void InsertTeam(String SnitchCatcherID, String County, String State, String Name
 		case 1:
 			JOptionPane.showMessageDialog(null, "Error Code 1: Provided Incorrect Parameters!");
 			break;
-		case 2:
-			JOptionPane.showMessageDialog(null, "Error Code 2: SnitchCatcherID must be a valid AthleteID!");;
-			break;
 		}
 	}
 	catch(SQLException e) {
 		e.printStackTrace();
 	}
 }
-void UpdateTeam(String SnitchCatcherID, String County, String State, String Name, String TeamID) {
+void UpdateTeam(String County, String State, String Name, String TeamID) {
 	try{
-		CallableStatement stmt = conn.prepareCall("{? = call [Update_Team](?, ?, ?, ?, ?)}");
+		CallableStatement stmt = conn.prepareCall("{? = call [Update_Team](?, ?, ?, ?)}");
 		stmt.registerOutParameter(1, Types.INTEGER);
-		stmt.setString(2, SnitchCatcherID);
-		stmt.setString(3, County);
-		stmt.setString(4, State);
-		stmt.setString(5, Name);
-		stmt.setString(6, TeamID);
-
+		stmt.setString(2, County);
+		stmt.setString(3, State);
+		stmt.setString(4, Name);
+		stmt.setString(5, TeamID);
+		stmt.execute();
 		int status = Integer.parseInt(stmt.getString(1));
 		switch(status){
 		case 0:
@@ -63,9 +58,6 @@ void UpdateTeam(String SnitchCatcherID, String County, String State, String Name
 			break;
 		case 2:
 			JOptionPane.showMessageDialog(null, "Error Code 1: Provided TeamID does not exist!");
-			break;
-		case 3:
-			JOptionPane.showMessageDialog(null, "Error Code 3: SnitchCatcherID must be a valid AthleteID!");;
 			break;
 		}
 	}
@@ -79,7 +71,7 @@ void Delete(String TeamID) {
 		CallableStatement stmt = conn.prepareCall("{? = call [Delete_Team](?)}");
 		stmt.registerOutParameter(1, Types.INTEGER);
 		stmt.setString(2, TeamID);
-
+		stmt.execute();
 		int status = Integer.parseInt(stmt.getString(1));
 		switch(status){
 		case 0:
@@ -98,6 +90,7 @@ void Delete(String TeamID) {
 	}
 }
 
+/*
 public ArrayList<String> getTeams(){
 	try{
 		ArrayList<String> teams = new ArrayList<>();
@@ -115,10 +108,68 @@ public ArrayList<String> getTeams(){
 		e.printStackTrace();
 	}
 	return null;
-	
-	
-	
-	
+}
+*/
+
+public ArrayList<String> getInfoFromID(String ID) {
+	try {
+		String[] temparr = {"State", "County"};
+		CallableStatement cs = conn.prepareCall("{ ? = call [Get_Team_data](?) }");
+		cs.registerOutParameter(1, Types.INTEGER);
+		cs.setString(2, ID);
+		ResultSet rs =  cs.executeQuery();
+		ArrayList<Integer> tempColumns = new ArrayList<Integer>();
+		/*int col = 0;
+		for (int z = 0; z < 7; z++) {
+			col = rs.findColumn(athleteFields[z]);
+			tempColumns.add(col);
+		}*/
+		int SC = rs.findColumn(temparr[0]);
+		int CC = rs.findColumn(temparr[1]);
+		int[] arr = {SC, CC};
+		ArrayList<String> tempInfo = new ArrayList<String>();
+		/*for(int y = 0; y < 7; y++) {
+			tempInfo.add(y, rs.getString(tempColumns.get(y)));
+			y++;
+		}*/
+		while(rs.next()) {
+			for(int y = 0; y < 2; y++) {
+				tempInfo.add(y, rs.getString(arr[y]));
+			}
+		/*tempInfo.add(y++, rs.getString(BHC));
+		tempInfo.add(y++, rs.getString(GC));
+		tempInfo.add(y++, rs.getString(PSC));
+		tempInfo.add(y++, rs.getString(SC));
+		tempInfo.add(y++, rs.getString(IC));
+		tempInfo.add(y++, rs.getString(FC));
+		tempInfo.add(y++, rs.getString(EC));*/
+		}
+		return tempInfo;
+	} catch (SQLException e) {
+		JOptionPane.showMessageDialog(null, "Uh oh, something went wrong.");
+		e.printStackTrace();
+		return null;
+	}
+}
+
+public ArrayList<String> getNameAndIndex() {
+	try {
+		CallableStatement cs = conn.prepareCall("{ ? = call [Get_Teams]() }");
+		cs.registerOutParameter(1, Types.INTEGER);
+		ResultSet rs = cs.executeQuery();
+		int IDColumn;
+		IDColumn = rs.findColumn("TeamID");
+		int nameColumn = rs.findColumn("Name");
+		ArrayList<String> temps = new ArrayList<String>();
+		while(rs.next()) {
+			temps.add(rs.getString(IDColumn) + "," + rs.getString(nameColumn));
+		}
+		return temps;
+	} catch (SQLException e) {
+		JOptionPane.showMessageDialog(null, "Uh oh, something went wrong.");
+		e.printStackTrace();
+		return null;
+	}
 }
 
 //private ArrayList<SodaByRestaurant> parseResults(ResultSet rs) {

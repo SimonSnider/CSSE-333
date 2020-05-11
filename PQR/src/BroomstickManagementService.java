@@ -54,7 +54,7 @@ public class BroomstickManagementService {
 			int status = Integer.parseInt(cs.getString(1));
 			switch(status) {
 			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully Inserted");
+				JOptionPane.showMessageDialog(null, "Successfully Updated");
 				break;
 			case 1:
 				JOptionPane.showMessageDialog(null, "Error Code 1: Release date cannot be after today's date");
@@ -91,16 +91,61 @@ public class BroomstickManagementService {
 			CallableStatement statement = this.conn.prepareCall("{? = call [Get_Broomsticks]()}");
 			statement.registerOutParameter(1, Types.INTEGER);
 			ResultSet rs = statement.executeQuery();
+			int IDC = rs.findColumn("BroomID");
+			int MC = rs.findColumn("Make");
+			int MDC = rs.findColumn("Model");
 			while(rs.next()) {
-	 			broomsticks.add(rs.getString("Make") + ", " + rs.getString("Model"));
-			} 
-			for(String current: broomsticks) {
-				System.out.println(current);
+	 			broomsticks.add(rs.getString(IDC) + "," + rs.getString(MC) + ", " + rs.getString(MDC));
 			}
 			return broomsticks;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	
+	
+	///FIX
+	public ArrayList<String> getInfoFromID(String ID) {
+		try {
+			String[] temparr = {"Make", "Model", "ReleaseDate"};
+			CallableStatement cs = conn.prepareCall("{ ? = call [Get_Broomstick_Data](?) }");
+			cs.registerOutParameter(1, Types.INTEGER);
+			cs.setString(2, ID);
+			ResultSet rs =  cs.executeQuery();
+			ArrayList<Integer> tempColumns = new ArrayList<Integer>();
+			/*int col = 0;
+			for (int z = 0; z < 7; z++) {
+				col = rs.findColumn(athleteFields[z]);
+				tempColumns.add(col);
+			}*/
+			int MC = rs.findColumn(temparr[0]);
+			int MDC = rs.findColumn(temparr[1]);
+			int RDC = rs.findColumn(temparr[2]);
+			int[] arr = {MC, MDC, RDC};
+			ArrayList<String> tempInfo = new ArrayList<String>();
+			/*for(int y = 0; y < 7; y++) {
+				tempInfo.add(y, rs.getString(tempColumns.get(y)));
+				y++;
+			}*/
+			while(rs.next()) {
+				for(int y = 0; y < 3; y++) {
+					tempInfo.add(y, rs.getString(arr[y]));
+				}
+			/*tempInfo.add(y++, rs.getString(BHC));
+			tempInfo.add(y++, rs.getString(GC));
+			tempInfo.add(y++, rs.getString(PSC));
+			tempInfo.add(y++, rs.getString(SC));
+			tempInfo.add(y++, rs.getString(IC));
+			tempInfo.add(y++, rs.getString(FC));
+			tempInfo.add(y++, rs.getString(EC));*/
+			}
+			return tempInfo;
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Uh oh, something went wrong.");
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
