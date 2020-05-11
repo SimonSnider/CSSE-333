@@ -353,7 +353,7 @@ public class ApplicationRunner {
 	}
 	
 	public void clearAllElements() {
-		for(JComboBox tempBox : acb) {
+		for(JComboBox tempBox : acb) { 
 			ActionListener[] al = tempBox.getActionListeners();
 			for(ActionListener tempAl : al) {
 				tempBox.removeActionListener(tempAl);
