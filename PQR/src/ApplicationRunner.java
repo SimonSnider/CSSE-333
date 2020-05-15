@@ -18,8 +18,7 @@ import javax.swing.border.Border;
 
 public class ApplicationRunner {
 	DatabaseConnectionService connector = new DatabaseConnectionService(null, null);
-	ImportManager im = new ImportManager(connector.getConnection());
-	boolean t = im.importBroomsticks();
+	ImportManager im;
 	AthleteManagementService ams;
 	TeamManagementService tms; 
 	MatchManagementService mms; 
@@ -744,6 +743,8 @@ public class ApplicationRunner {
 					tms = new TeamManagementService(connector.getConnection());
 					mms = new MatchManagementService(connector.getConnection());
 					bms = new BroomstickManagementService(connector.getConnection());
+					im = new ImportManager(connector.getConnection());
+					im.importTeams();
 					if (t == true) {
 						timer.start();
 						label.setText("Successfully connected!");

@@ -42,6 +42,39 @@ public class ImportManager {
 					String date = dateFormat.format(cellIterator.next().getDateCellValue());
 					
 					System.out.println(make + ", " + model + ", " + date);
+					bms.InsertBroomstick(make, model, date);
+				}
+				
+			}
+			wb.close();
+			return true;
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean importTeams() {
+		try {
+			TeamManagementService tms = new TeamManagementService(this.conn);
+			FileInputStream fis = new FileInputStream(file);
+			XSSFWorkbook wb = new XSSFWorkbook(fis);
+			XSSFSheet sheet = wb.getSheet("Team");
+			
+			
+			
+			Iterator<Row> rowIterator = sheet.iterator();
+			while (rowIterator.hasNext()) {
+				Row row = rowIterator.next();
+				Iterator<Cell> cellIterator = row.cellIterator();
+				
+				while (cellIterator.hasNext()) {
+					String name = cellIterator.next().getStringCellValue();
+					String state = cellIterator.next().getStringCellValue();
+					String county = cellIterator.next().getStringCellValue();
+					
+					System.out.println(name + ", " + state + ", " + county);
+					tms.InsertTeam(county, state, name);
 				}
 				
 			}
