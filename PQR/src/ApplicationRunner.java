@@ -748,6 +748,7 @@ public class ApplicationRunner {
 					im = new ImportManager(connector.getConnection());
 					im.importTeams();
 					im.importAthletes();
+					im.importRides();
 					if (t == true) {
 						timer.start();
 						label.setText("Successfully connected!");

@@ -131,7 +131,7 @@ public class ImportManager {
 			RidesManagementService rms = new RidesManagementService(this.conn);
 			FileInputStream fis = new FileInputStream(file);
 			XSSFWorkbook wb = new XSSFWorkbook(fis);
-			XSSFSheet sheet = wb.getSheet("Athlete");
+			XSSFSheet sheet = wb.getSheet("Rides");
 			
 			
 			
