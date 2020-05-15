@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import javafx.scene.control.DatePicker;
+
 public class ApplicationRunner {
 	DatabaseConnectionService connector = new DatabaseConnectionService(null, null);
 	ImportManager im;
@@ -548,7 +550,7 @@ public class ApplicationRunner {
 			runBox5.addItem((String)tempObject);
 			runBox6.addItem((String)tempObject);
 		}
-		String matchFields[] = {"Home Team", "Away Team", "Home Score", "Away Score", "Date", "Stadium", "Matches", "Home Team", "Away Team", "Home Score", "Away Score", "Date", "Stadium", "Matches"};
+		String matchFields[] = {"Home Team", "Away Team", "Home Score", "Away Score", "Date (yyyy-mm-dd)", "Stadium", "Matches", "Home Team", "Away Team", "Home Score", "Away Score", "Date (yyyy-mm-dd)", "Stadium", "Matches"};
 		for(int a = 0; a < 14; a++) {
 			al.get(a).setText(matchFields[a]);
 		}
@@ -648,7 +650,7 @@ public class ApplicationRunner {
 			runBox1.addItem((String)tempObject);
 			runBox2.addItem((String)tempObject);
 		}
-		String broomstickFields[] = {"Make", "Model", "Release Date", "Broomsticks", "Make", "Model", "Release Date", "Broomsticks"};
+		String broomstickFields[] = {"Make", "Model", "Release Date (yyyy-mm-dd)", "Broomsticks", "Make", "Model", "Release Date (yyyy-mm-dd)", "Broomsticks"};
 		for(int a = 0; a < 8; a++) {
 			al.get(a).setText(broomstickFields[a]);
 		}
