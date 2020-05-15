@@ -83,7 +83,6 @@ public class CompetedInManagementService {
 					break;
 				
 				}
-				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

@@ -8,40 +8,43 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class RidesManagementService {
-private Connection cmd;
-	
-	public RidesManagementService(Connection cmd) {
-		this.cmd = cmd;
+private Connection conn;
+	public RidesManagementService(Connection conn) {
+		this.conn = conn;
 	}
-	
-	void InsertRides(String AthleteID, String BroomID) {
+	int InsertRides(String AthleteID, String BroomID) {
 		try {
-			CallableStatement cs = cmd.prepareCall("{? = call [Insert_Rides](?, ?)}");
+			CallableStatement cs = this.conn.prepareCall("{? = call [Insert_Rides](?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, AthleteID);
 			cs.setString(3, BroomID);
 			cs.execute();
 			
 			int status = Integer.parseInt(cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully Inserted");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "AthledeID does not exist");
-				break;
-			case 2:
-				JOptionPane.showMessageDialog(null, "Athlete already rides a broomstick, use Update procedure instead.");
-				break;
-			}
+			return status;
 		} catch(SQLException e) {
 			e.printStackTrace();
+			return -1;
 		}
 	}
 	
-	void UpdateRides(String AthleteID, String BroomstickID) {
+	void handleInsertStatus(int status) {
+		switch(status) {
+		case 0:
+			JOptionPane.showMessageDialog(null, "Successfully Inserted");
+			break;
+		case 1:
+			JOptionPane.showMessageDialog(null, "AthledeID does not exist");
+			break;
+		case 2:
+			JOptionPane.showMessageDialog(null, "Athlete already rides a broomstick, use Update procedure instead.");
+			break;
+		}
+	}
+	
+	int UpdateRides(String AthleteID, String BroomstickID) {
 		try {
-			CallableStatement cs = cmd.prepareCall("{? = call [Update_Rides](?, ?)}");
+			CallableStatement cs = this.conn.prepareCall("{? = call [Update_Rides](?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, AthleteID);
 			cs.setString(3, BroomstickID);
@@ -62,36 +65,60 @@ private Connection cmd;
 				JOptionPane.showMessageDialog(null, "Athlete not in Rides table, use Insert instead");
 				break;
 			}
+			return status;
 		} catch(SQLException e) {
 			e.printStackTrace();
+			return -1;
 		}
 	}
 	
-	void DeleteRides(String AthleteID) {
+	void handleUpdateStatus(int status) {
+		switch(status) {
+		case 0:
+			JOptionPane.showMessageDialog(null, "Successfully Inserted");
+			break;
+		case 1:
+			JOptionPane.showMessageDialog(null, "AthleteID does not exist");
+			break;
+		case 2:
+			JOptionPane.showMessageDialog(null, "BroomstickID does not exist");
+			break;
+		case 3:
+			JOptionPane.showMessageDialog(null, "Athlete not in Rides table, use Insert instead");
+			break;
+		}
+	}
+	
+	int DeleteRides(String AthleteID) {
 		try {
-			CallableStatement cs = cmd.prepareCall("{? = call [delete_Rides](?)}");
+			CallableStatement cs = this.conn.prepareCall("{? = call [delete_Rides](?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, AthleteID);
 			cs.execute();
 			
 			int status = Integer.parseInt(cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully deleted");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "AthleteID does not exist in Rides table");
-				break;
-			}
+			return status;
 		} catch(SQLException e) {
 			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	void handleDeleteStatus(int status) {
+		switch(status) {
+		case 0:
+			JOptionPane.showMessageDialog(null, "Successfully deleted");
+			break;
+		case 1:
+			JOptionPane.showMessageDialog(null, "AthleteID does not exist in Rides table");
+			break;
 		}
 	}
 	
 	public ArrayList<String> getRides(){
 		try{
 			ArrayList<String> matches = new ArrayList<>();
-			CallableStatement statement = this.cmd.prepareCall("{? = call [Get_Rides]()}");
+			CallableStatement statement = this.conn.prepareCall("{? = call [Get_Rides]()}");
 			statement.registerOutParameter(1, Types.INTEGER);
 			ResultSet rs = statement.executeQuery();
 			int AIDC = rs.findColumn("AthleteID");
@@ -115,7 +142,7 @@ private Connection cmd;
 	public ArrayList<String> getInfoFromID(String AID, String BID) {
 		try {
 			String[] temparr = {"AthleteID", "BroomID", "Name", "Make", "Model"};
-			CallableStatement cs = cmd.prepareCall("{ ? = call [Get_Rides_Data](?, ?) }");
+			CallableStatement cs = conn.prepareCall("{ ? = call [Get_Rides_Data](?, ?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(3, AID);
 			cs.setString(2, BID);

@@ -17,7 +17,7 @@ public class TeamManagementService {
 public TeamManagementService(Connection connection) {
 	this.conn = connection;
 }
-void InsertTeam(String County, String State, String Name) {
+int InsertTeam(String County, String State, String Name) {
 	try{
 		CallableStatement stmt = conn.prepareCall("{? = call [Insert_Team](?, ?, ?)}");
 		stmt.registerOutParameter(1, Types.INTEGER);
@@ -26,20 +26,26 @@ void InsertTeam(String County, String State, String Name) {
 		stmt.setString(4, Name);
 		stmt.execute();
 		int status = Integer.parseInt(stmt.getString(1));
-		switch(status){
-		case 0:
-			JOptionPane.showMessageDialog(null, "Successfully Inserted Team");
-			break;
-		case 1:
-			JOptionPane.showMessageDialog(null, "Error Code 1: Provided Incorrect Parameters!");
-			break;
-		}
+		return status;
 	}
 	catch(SQLException e) {
 		e.printStackTrace();
+		return -1;
 	}
 }
-void UpdateTeam(String County, String State, String Name, String TeamID) {
+
+void handleInsertStatus(int status) {
+	switch(status){
+	case 0:
+		JOptionPane.showMessageDialog(null, "Successfully Inserted Team");
+		break;
+	case 1:
+		JOptionPane.showMessageDialog(null, "Error Code 1: Provided Incorrect Parameters!");
+		break;
+	}
+}
+
+int UpdateTeam(String County, String State, String Name, String TeamID) {
 	try{
 		CallableStatement stmt = conn.prepareCall("{? = call [Update_Team](?, ?, ?, ?)}");
 		stmt.registerOutParameter(1, Types.INTEGER);
@@ -49,45 +55,55 @@ void UpdateTeam(String County, String State, String Name, String TeamID) {
 		stmt.setString(5, TeamID);
 		stmt.execute();
 		int status = Integer.parseInt(stmt.getString(1));
-		switch(status){
-		case 0:
-			JOptionPane.showMessageDialog(null, "Successfully Updated Team");
-			break;
-		case 1:
-			JOptionPane.showMessageDialog(null, "Error Code 1: Provided Incorrect Parameters!");
-			break;
-		case 2:
-			JOptionPane.showMessageDialog(null, "Error Code 1: Provided TeamID does not exist!");
-			break;
-		}
+		return status;
 	}
 	catch(SQLException e) {
 		e.printStackTrace();
+		return -1;
 	}
 }
 
-void Delete(String TeamID) {
+void handleUpdateStatus(int status) {
+	switch(status){
+	case 0:
+		JOptionPane.showMessageDialog(null, "Successfully Updated Team");
+		break;
+	case 1:
+		JOptionPane.showMessageDialog(null, "Error Code 1: Provided Incorrect Parameters!");
+		break;
+	case 2:
+		JOptionPane.showMessageDialog(null, "Error Code 1: Provided TeamID does not exist!");
+		break;
+	}
+}
+
+int DeleteTeam(String TeamID) {
 	try{
 		CallableStatement stmt = conn.prepareCall("{? = call [Delete_Team](?)}");
 		stmt.registerOutParameter(1, Types.INTEGER);
 		stmt.setString(2, TeamID);
 		stmt.execute();
 		int status = Integer.parseInt(stmt.getString(1));
-		switch(status){
-		case 0:
-			JOptionPane.showMessageDialog(null, "Successfully Deleted Team");
-			break;
-		case 1:
-			JOptionPane.showMessageDialog(null, "Error Code 1: Provided Incorrect Parameters!");
-			break;
-		case 2:
-			JOptionPane.showMessageDialog(null, "Error Code 1: SnitchCatcherID must be a valid AthleteID!");
-			break;
-		}
+		return status;
 	}
 	catch(SQLException e) {
 		JOptionPane.showMessageDialog(null, "You cannot delete a team that has competed in a match.");
 		e.printStackTrace();
+		return -1;
+	}
+}
+
+void handleDeleteStatus(int status) {
+	switch(status) {
+	case 0:
+		JOptionPane.showMessageDialog(null, "Successfully Deleted Team");
+		break;
+	case 1:
+		JOptionPane.showMessageDialog(null, "Error Code 1: Provided Incorrect Parameters!");
+		break;
+	case 2:
+		JOptionPane.showMessageDialog(null, "Error Code 1: SnitchCatcherID must be a valid AthleteID!");
+		break;
 	}
 }
 
