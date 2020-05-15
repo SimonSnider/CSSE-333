@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;  
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+
 import com.ibm.icu.text.SimpleDateFormat; 
 
 public class ImportManager {
@@ -115,6 +116,38 @@ public class ImportManager {
 					
 					System.out.println(name + ", " + bludgerHits + ", " + grade + ", " + pointsScored + ", " + school + ", " + injuries + ", " + fouls + ", " + ejections);
 					ams.InsertAthlete(name, bludgerHits, grade, pointsScored, school, fouls, ejections, injuries);
+				}
+				
+			}
+			wb.close();
+			return true;
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	public boolean importRides() {
+		try {
+			RidesManagementService rms = new RidesManagementService(this.conn);
+			FileInputStream fis = new FileInputStream(file);
+			XSSFWorkbook wb = new XSSFWorkbook(fis);
+			XSSFSheet sheet = wb.getSheet("Athlete");
+			
+			
+			
+			Iterator<Row> rowIterator = sheet.iterator();
+			while (rowIterator.hasNext()) {
+				Row row = rowIterator.next();
+				Iterator<Cell> cellIterator = row.cellIterator();
+				
+				while (cellIterator.hasNext()) {
+				
+					String athleteID = Integer.toString((int)cellIterator.next().getNumericCellValue());
+					String matchID = Integer.toString((int)cellIterator.next().getNumericCellValue());
+				
+					
+					System.out.println(athleteID + ", " + matchID);
+					rms.InsertRides(athleteID, matchID);
 				}
 				
 			}

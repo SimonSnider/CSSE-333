@@ -1,19 +1,20 @@
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
 
 import javax.swing.JOptionPane;
 
 public class RidesManagementService {
-private ConnectionManagementDevice cmd;
+private Connection conn;
 	
-	public RidesManagementService(ConnectionManagementDevice cmd) {
-		this.cmd = cmd;
+	public RidesManagementService(Connection conn) {
+		this.conn = conn;
 	}
 	
 	void InsertRides(String AthleteID, String BroomID) {
 		try {
-			CallableStatement cs = cmd.getConnection().prepareCall("{? = call [Insert_Rides](?, ?)}");
+			CallableStatement cs = this.conn.prepareCall("{? = call [Insert_Rides](?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, AthleteID);
 			cs.setString(3, BroomID);
@@ -38,7 +39,7 @@ private ConnectionManagementDevice cmd;
 	
 	void UpdateRides(String AthleteID, String BroomstickID) {
 		try {
-			CallableStatement cs = cmd.getConnection().prepareCall("{? = call [Update_Rides](?, ?)}");
+			CallableStatement cs = this.conn.prepareCall("{? = call [Update_Rides](?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, BroomstickID);
 			cs.setString(3, BroomstickID);
@@ -66,7 +67,7 @@ private ConnectionManagementDevice cmd;
 	
 	void DeleteRides(String AthleteID) {
 		try {
-			CallableStatement cs = cmd.getConnection().prepareCall("{? = call [delete_Rides](?)}");
+			CallableStatement cs = this.conn.prepareCall("{? = call [delete_Rides](?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, AthleteID);
 			cs.execute();
