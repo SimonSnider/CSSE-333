@@ -1,19 +1,20 @@
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.sql.Connection;
 
 import javax.swing.JOptionPane;
 
 public class PlaysOnManagementService {
-	private ConnectionManagementDevice cmd;
+	private Connection conn;
 	
-	public PlaysOnManagementService(ConnectionManagementDevice cmd) {
-		this.cmd = cmd;
+	public PlaysOnManagementService(Connection conn) {
+		this.conn = conn;
 	}
 	
 	void InsertPlaysOn(String AthleteID, String TeamID, String Position, String JoinedDate, String LeftDate) {
 		try {
-			CallableStatement cs = cmd.getConnection().prepareCall("{? = call [Insert_PlaysOn](?, ?, ?, ?, ?)}");
+			CallableStatement cs = conn.prepareCall("{? = call [Insert_PlaysOn](?, ?, ?, ?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, AthleteID);
 			cs.setString(3, TeamID);
@@ -47,7 +48,7 @@ public class PlaysOnManagementService {
 	
 	void UpdatePlaysOn(String AthleteID, String TeamID, String Position, String JoinedDate, String LeftDate) {
 		try {
-			CallableStatement cs = cmd.getConnection().prepareCall("{? = call [Update_PlaysOn](?, ?, ?, ?, ?)}");
+			CallableStatement cs = conn.prepareCall("{? = call [Update_PlaysOn](?, ?, ?, ?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, AthleteID);
 			cs.setString(3, TeamID);
@@ -81,7 +82,7 @@ public class PlaysOnManagementService {
 	
 	void DeletePlaysOn(String AthleteID, String TeamID) {
 		try {
-			CallableStatement cs = cmd.getConnection().prepareCall("{? = call [delete_PlaysOn](?, ?)}");
+			CallableStatement cs = conn.prepareCall("{? = call [delete_PlaysOn](?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, AthleteID);
 			cs.setString(3, TeamID);

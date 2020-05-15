@@ -55,6 +55,41 @@ public class ImportManager {
 		}
 	}
 	
+	public boolean importPlaysOn() {
+		try {
+			PlaysOnManagementService poms = new PlaysOnManagementService(this.conn);
+			FileInputStream fis = new FileInputStream(file);
+			XSSFWorkbook wb = new XSSFWorkbook(fis);
+			XSSFSheet sheet = wb.getSheet("Broomstick");
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+			
+			
+			Iterator<Row> rowIterator = sheet.iterator();
+			while (rowIterator.hasNext()) {
+				Row row = rowIterator.next();
+				Iterator<Cell> cellIterator = row.cellIterator();
+				
+				while (cellIterator.hasNext()) {
+					String AthleteID = Integer.toString((int)cellIterator.next().getNumericCellValue());
+					String TeamID = Integer.toString((int)cellIterator.next().getNumericCellValue());
+					String position = cellIterator.next().getStringCellValue();
+					String joined = dateFormat.format(cellIterator.next().getDateCellValue());
+					String left = dateFormat.format(cellIterator.next().getDateCellValue());
+					
+					System.out.println(AthleteID + ", " + TeamID + ", " + position + ", " + joined + ", " + left);
+					poms.InsertPlaysOn(AthleteID, TeamID, position, joined, left);
+				}
+				
+			}
+			wb.close();
+			return true;
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public boolean importTeams() {
 		try {
 			TeamManagementService tms = new TeamManagementService(this.conn);
