@@ -15,7 +15,7 @@ public class AthleteManagementService {
 		this.conn = conn;
 	}
 
-	void InsertAthlete(String name, String bludgerHits, String grade, String pointsScored, String school, String fouls, String ejections, String injuries) {
+	int InsertAthlete(String name, String bludgerHits, String grade, String pointsScored, String school, String fouls, String ejections, String injuries) {
 		try {
 			CallableStatement cs = conn.prepareCall("{ ? = call [Insert_Athlete](?, ?, ?, ?, ?, ?, ?, ?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
@@ -29,20 +29,26 @@ public class AthleteManagementService {
 			cs.setString(9, injuries);
 			cs.execute();
 			int status = Integer.parseInt(cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully inserted!");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "Error Code 1: Integer values cannot be negative values.");
-				break;
-			}
+			return status;
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return -1;
 		}
 	}
 	
-	void UpdateAthlete(String athleteID, String name, String bludgerHits, String grade, String pointsScored, String school, String fouls, String ejections, String injuries) {
+	void handleAthleteInsertStatus(int status) {
+		switch(status) {
+		case 0:
+			JOptionPane.showMessageDialog(null, "Successfully inserted!");
+			break;
+		case 1:
+			JOptionPane.showMessageDialog(null, "Error Code 1: Integer values cannot be negative values.");
+			break;
+		}
+	}
+	
+	int UpdateAthlete(String athleteID, String name, String bludgerHits, String grade, String pointsScored, String school, String fouls, String ejections, String injuries) {
 		try {
 			CallableStatement cs = conn.prepareCall("{ ? = call [Update_Athlete](?, ?, ?, ?, ?, ?, ?, ?, ?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
@@ -57,42 +63,52 @@ public class AthleteManagementService {
 			cs.setString(10, injuries);
 			cs.execute();
 			int status = Integer.parseInt(cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully updated!");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "Error Code 1: AthleteID cannot be null.");
-				break;
-			case 2:
-				JOptionPane.showMessageDialog(null, "Error Code 2: Invalid AthleteID.");
-				break;
-			}
+			return status;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	void handleAthleteUpdateStatus(int status) {
+		switch(status) {
+		case 0:
+			JOptionPane.showMessageDialog(null, "Successfully updated!");
+			break;
+		case 1:
+			JOptionPane.showMessageDialog(null, "Error Code 1: AthleteID cannot be null.");
+			break;
+		case 2:
+			JOptionPane.showMessageDialog(null, "Error Code 2: Invalid AthleteID.");
+			break;
 		}
 	}
 
-	void DeleteAthlete(String athleteID) {
+	int DeleteAthlete(String athleteID) {
 		try {
 			CallableStatement cs = conn.prepareCall("{ ? = call [Delete_Athlete](?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, athleteID);
 			cs.execute();
 			int status = Integer.parseInt(cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully deleted!");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "Error Code 1: AthleteID cannot be null.");
-				break;
-			case 2:
-				JOptionPane.showMessageDialog(null, "Error Code 2: Invalid AthleteID.");
-				break;
-			}
+			return status;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	void handleAthleteDeleteStatus(int status) {
+		switch(status) {
+		case 0:
+			JOptionPane.showMessageDialog(null, "Successfully deleted!");
+			break;
+		case 1:
+			JOptionPane.showMessageDialog(null, "Error Code 1: AthleteID cannot be null.");
+			break;
+		case 2:
+			JOptionPane.showMessageDialog(null, "Error Code 2: Invalid AthleteID.");
+			break;
 		}
 	}
 

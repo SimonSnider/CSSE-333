@@ -213,13 +213,16 @@ public class ApplicationRunner {
 		insertButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				int status;
 				switch ((String)runBox.getSelectedItem()) {
 				case "Athlete":
-					ams.InsertAthlete(runField11.getText(), runField12.getText(), runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText(), runField17.getText(), runField18.getText());
+					status = ams.InsertAthlete(runField11.getText(), runField12.getText(), runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText(), runField17.getText(), runField18.getText());
+					ams.handleAthleteInsertStatus(status);
 					runAthleteInput();
 					break;
 				case "Team":
-					tms.InsertTeam(runField12.getText(), runField13.getText(), runField11.getText());
+					status = tms.InsertTeam(runField12.getText(), runField13.getText(), runField11.getText());
+					tms.handleInsertStatus(status);
 					runTeamInput();
 					break;
 				case "Match":
@@ -229,11 +232,13 @@ public class ApplicationRunner {
 					temp = (String)acb.get(3).getSelectedItem();
 					pos = temp.indexOf(",", 0);
 					String ID3 = temp.substring(0,pos);
-					mms.InsertMatch(ID2, ID3, runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText());
+					status = mms.InsertMatch(ID2, ID3, runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText());
+					mms.handleInsertStatus(status);
 					runMatchInput();
 					break;
 				case "Broomstick":
-					bms.InsertBroomstick(runField11.getText(), runField12.getText(), runField13.getText());
+					status = bms.InsertBroomstick(runField11.getText(), runField12.getText(), runField13.getText());
+					bms.handleBroomInsertStatus(status);
 					runBroomstickInput();
 					break;
 				default:
@@ -246,13 +251,15 @@ public class ApplicationRunner {
 		updateButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				int status;
 				switch ((String)runBox.getSelectedItem()) {
 				case "Athlete":
 					String temp = (String)acb.get(0).getSelectedItem();
 					int pos = temp.indexOf(",", 0);
 					String ID = temp.substring(0,pos);
 					String Name = temp.substring(pos+1);
-					ams.UpdateAthlete(ID, Name, runField22.getText(), runField23.getText(), runField24.getText(), runField25.getText(), runField26.getText(), runField27.getText(), runField28.getText());
+					status = ams.UpdateAthlete(ID, Name, runField22.getText(), runField23.getText(), runField24.getText(), runField25.getText(), runField26.getText(), runField27.getText(), runField28.getText());
+					ams.handleAthleteUpdateStatus(status);
 					runAthleteInput();
 					break;
 				case "Team":
@@ -260,7 +267,8 @@ public class ApplicationRunner {
 					pos = temp.indexOf(",", 0);
 					ID = temp.substring(0,pos);
 					Name = temp.substring(pos+1);
-					tms.UpdateTeam(runField15.getText(), runField16.getText(), Name, ID);
+					status = tms.UpdateTeam(runField15.getText(), runField16.getText(), Name, ID);
+					tms.handleUpdateStatus(status);
 					runTeamInput();
 					break;
 				case "Match":
@@ -274,14 +282,16 @@ public class ApplicationRunner {
 					temp = (String)acb.get(5).getSelectedItem();
 					pos = temp.indexOf(",", 0);
 					String ID3 = temp.substring(0,pos);
-					mms.UpdateMatch(ID, ID2, ID3, runField22.getText(), runField23.getText(), runField24.getText(), runField25.getText());
+					status = mms.UpdateMatch(ID, ID2, ID3, runField22.getText(), runField23.getText(), runField24.getText(), runField25.getText());
+					mms.handleUpdateStatus(status);
 					runMatchInput();
 					break;
 				case "Broomstick":
 					temp = (String)acb.get(0).getSelectedItem();
 					pos = temp.indexOf(",", 0);
 					ID = temp.substring(0,pos);
-					bms.UpdateBroomstick(ID, runField15.getText(), runField16.getText(), runField17.getText());
+					status = bms.UpdateBroomstick(ID, runField15.getText(), runField16.getText(), runField17.getText());
+					bms.handleBroomUpdateStatus(status);
 					runBroomstickInput();
 					break;
 				default:
@@ -293,33 +303,38 @@ public class ApplicationRunner {
 		deleteButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				int status;
 				switch ((String)runBox.getSelectedItem()) {
 				case "Athlete":
 					String temp = (String)acb.get(1).getSelectedItem();
 					int pos = temp.indexOf(",", 0);
 					String ID = temp.substring(0,pos);
-					ams.DeleteAthlete(ID);
+					status = ams.DeleteAthlete(ID);
+					ams.handleAthleteDeleteStatus(status);
 					runAthleteInput();
 					break;
 				case "Team":
 					temp = (String)acb.get(1).getSelectedItem();
 					pos = temp.indexOf(",", 0);
 					ID = temp.substring(0,pos);
-					tms.Delete(ID);
+					status = tms.DeleteTeam(ID);
+					tms.handleDeleteStatus(status);
 					runTeamInput();
 					break;
 				case "Match":
 					temp = (String)acb.get(1).getSelectedItem();
 					pos = temp.indexOf(",", 0);
 					ID = temp.substring(0,pos);
-					mms.DeleteMatch(ID);
+					status = mms.DeleteMatch(ID);
+					mms.handleDeleteStatus(status);
 					runMatchInput();
 					break;
 				case "Broomstick":
 					temp = (String)acb.get(1).getSelectedItem();
 					pos = temp.indexOf(",", 0);
 					ID = temp.substring(0,pos);
-					bms.DeleteBroomstick(ID);
+					status = bms.DeleteBroomstick(ID);
+					bms.handleBroomDeleteStatus(status);
 					runBroomstickInput();
 					break;
 				default:
@@ -746,9 +761,7 @@ public class ApplicationRunner {
 					mms = new MatchManagementService(connector.getConnection());
 					bms = new BroomstickManagementService(connector.getConnection());
 					im = new ImportManager(connector.getConnection());
-					im.importTeams();
-					im.importAthletes();
-					im.importRides();
+
 					if (t == true) {
 						timer.start();
 						label.setText("Successfully connected!");

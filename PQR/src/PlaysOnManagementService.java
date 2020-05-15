@@ -12,7 +12,7 @@ public class PlaysOnManagementService {
 		this.conn = conn;
 	}
 	
-	void InsertPlaysOn(String AthleteID, String TeamID, String Position, String JoinedDate, String LeftDate) {
+	int InsertPlaysOn(String AthleteID, String TeamID, String Position, String JoinedDate, String LeftDate) {
 		try {
 			CallableStatement cs = conn.prepareCall("{? = call [Insert_PlaysOn](?, ?, ?, ?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
@@ -24,29 +24,35 @@ public class PlaysOnManagementService {
 			cs.execute();
 			
 			int status = Integer.parseInt(cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully Inserted");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "AthledeID does not exist");
-				break;
-			case 2:
-				JOptionPane.showMessageDialog(null, "TeamID does not exist");
-				break;
-			case 3:
-				JOptionPane.showMessageDialog(null, "Athlete already plays on a team, use update procedure instead");
-				break;
-			case 4:
-				JOptionPane.showMessageDialog(null, "Check that JoinedDate and LeftDate obey the laws of time");
-				break;
-			}
+			return status;
+			
 		} catch(SQLException e) {
 			e.printStackTrace();
+			return -1;
 		}
 	}
 	
-	void UpdatePlaysOn(String AthleteID, String TeamID, String Position, String JoinedDate, String LeftDate) {
+	void handleInsertStatus(int status) {
+		switch(status) {
+		case 0:
+			JOptionPane.showMessageDialog(null, "Successfully Inserted");
+			break;
+		case 1:
+			JOptionPane.showMessageDialog(null, "AthledeID does not exist");
+			break;
+		case 2:
+			JOptionPane.showMessageDialog(null, "TeamID does not exist");
+			break;
+		case 3:
+			JOptionPane.showMessageDialog(null, "Athlete already plays on a team, use update procedure instead");
+			break;
+		case 4:
+			JOptionPane.showMessageDialog(null, "Check that JoinedDate and LeftDate obey the laws of time");
+			break;
+		}
+	}
+	
+	int UpdatePlaysOn(String AthleteID, String TeamID, String Position, String JoinedDate, String LeftDate) {
 		try {
 			CallableStatement cs = conn.prepareCall("{? = call [Update_PlaysOn](?, ?, ?, ?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
@@ -58,29 +64,35 @@ public class PlaysOnManagementService {
 			cs.execute();
 			
 			int status = Integer.parseInt(cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully Inserted");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "AthleteID does not exist");
-				break;
-			case 2:
-				JOptionPane.showMessageDialog(null, "TeamID does not exist");
-				break;
-			case 3:
-				JOptionPane.showMessageDialog(null, "Athlete has not played on given team, use insert instead");
-				break;
-			case 4:
-				JOptionPane.showMessageDialog(null, "Check that Joined date and Left date obey the laws of time");
-				break;
-			}
+			return status;
+			
 		} catch(SQLException e) {
 			e.printStackTrace();
+			return -1;
 		}
 	}
 	
-	void DeletePlaysOn(String AthleteID, String TeamID) {
+	void handleUpdateStatus(int status) {
+		switch(status) {
+		case 0:
+			JOptionPane.showMessageDialog(null, "Successfully Inserted");
+			break;
+		case 1:
+			JOptionPane.showMessageDialog(null, "AthleteID does not exist");
+			break;
+		case 2:
+			JOptionPane.showMessageDialog(null, "TeamID does not exist");
+			break;
+		case 3:
+			JOptionPane.showMessageDialog(null, "Athlete has not played on given team, use insert instead");
+			break;
+		case 4:
+			JOptionPane.showMessageDialog(null, "Check that Joined date and Left date obey the laws of time");
+			break;
+		}
+	}
+	
+	int DeletePlaysOn(String AthleteID, String TeamID) {
 		try {
 			CallableStatement cs = conn.prepareCall("{? = call [delete_PlaysOn](?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
@@ -89,22 +101,28 @@ public class PlaysOnManagementService {
 			cs.execute();
 			
 			int status = Integer.parseInt(cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully deleted");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "AthleteID does not exist");
-				break;
-			case 2:
-				JOptionPane.showMessageDialog(null, "TeamID does not exist");
-				break;
-			case 3:
-				JOptionPane.showMessageDialog(null, "Athlete has not played on given team");
-				break;
-			}
+			return status;
+			
 		} catch(SQLException e) {
 			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	void handleDeleteStatus(int status) {
+		switch(status) {
+		case 0:
+			JOptionPane.showMessageDialog(null, "Successfully deleted");
+			break;
+		case 1:
+			JOptionPane.showMessageDialog(null, "AthleteID does not exist");
+			break;
+		case 2:
+			JOptionPane.showMessageDialog(null, "TeamID does not exist");
+			break;
+		case 3:
+			JOptionPane.showMessageDialog(null, "Athlete has not played on given team");
+			break;
 		}
 	}
 }

@@ -20,6 +20,25 @@ public class ImportManager {
 		this.file = new File("C:\\Users\\snidersa\\git\\CSSE-333\\PQR data.xlsx");
 	}
 	
+	public void importAll() {
+		System.out.println("Importing data for all tables.");
+		System.out.println("Importing Athletes:");
+		this.importAthletes();
+		System.out.println("Importing Broomsticks:");
+		this.importBroomsticks();
+		System.out.println("Importing Matches:");
+		this.importMatches();
+		System.out.println("Importing Teams:");
+		this.importTeams();
+		System.out.println("Importing PlayedIn");
+		this.importPlayedIn();
+		System.out.println("Importing PlaysOn");
+		this.importPlaysOn();
+		System.out.println("Importing Rides");
+		this.importRides();
+		System.out.println("Import complete.");
+	}
+	
 	public boolean importBroomsticks() {
 		try {
 			BroomstickManagementService bms = new BroomstickManagementService(this.conn);
@@ -60,7 +79,7 @@ public class ImportManager {
 			PlaysOnManagementService poms = new PlaysOnManagementService(this.conn);
 			FileInputStream fis = new FileInputStream(file);
 			XSSFWorkbook wb = new XSSFWorkbook(fis);
-			XSSFSheet sheet = wb.getSheet("Broomstick");
+			XSSFSheet sheet = wb.getSheet("PlaysOn");
 			
 			SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 			

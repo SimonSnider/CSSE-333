@@ -15,7 +15,7 @@ public class BroomstickManagementService {
 		this.conn = conn;
 	}
 	
-	void InsertBroomstick(String make, String model, String date) {
+	int InsertBroomstick(String make, String model, String date) {
 		try {
 			CallableStatement cs = this.conn.prepareCall("{? = call [Insert_Broomstick](?, ?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
@@ -25,23 +25,29 @@ public class BroomstickManagementService {
 			cs.execute();
 			
 			int status = Integer.parseInt(cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully Inserted");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "Error Code 1: Broomstick Make and Model already exists");
-				break;
-			case 2:
-				JOptionPane.showMessageDialog(null, "Error Code 2: Release Date cannot be after today's date");
-				break;
-			}
+			return status;
+			
 		} catch(SQLException e) {
 			e.printStackTrace();
+			return -1;
 		}
 	}
 	
-	void UpdateBroomstick(String BroomstickID, String make, String model, String date) {
+	void handleBroomInsertStatus(int status) {
+		switch(status) {
+		case 0:
+			JOptionPane.showMessageDialog(null, "Successfully Inserted");
+			break;
+		case 1:
+			JOptionPane.showMessageDialog(null, "Error Code 1: Broomstick Make and Model already exists");
+			break;
+		case 2:
+			JOptionPane.showMessageDialog(null, "Error Code 2: Release Date cannot be after today's date");
+			break;
+		}
+	}
+	
+	int UpdateBroomstick(String BroomstickID, String make, String model, String date) {
 		try {
 			CallableStatement cs = conn.prepareCall("{? = call [Update_Broomstick](?, ?, ?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
@@ -52,20 +58,26 @@ public class BroomstickManagementService {
 			cs.execute();
 			
 			int status = Integer.parseInt(cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully Updated");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "Error Code 1: Release date cannot be after today's date");
-				break;
-			}
+			return status;
+			
 		} catch(SQLException e) {
 			e.printStackTrace();
+			return -1;
 		}
 	}
 	
-	void DeleteBroomstick(String BroomstickID) {
+	void handleBroomUpdateStatus(int status) {
+		switch(status) {
+		case 0:
+			JOptionPane.showMessageDialog(null, "Successfully Updated");
+			break;
+		case 1:
+			JOptionPane.showMessageDialog(null, "Error Code 1: Release date cannot be after today's date");
+			break;
+		}
+	}
+	
+	int DeleteBroomstick(String BroomstickID) {
 		try {
 			CallableStatement cs = this.conn.prepareCall("{? = call [Delete_Broomstick](?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
@@ -73,18 +85,25 @@ public class BroomstickManagementService {
 			cs.execute();
 			
 			int status = Integer.parseInt(cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully deleted");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "Error Code 1: BroomstickID does not exist");
-				break;
-			}
+			return status;
+			
 		} catch(SQLException e) {
 			e.printStackTrace();
+			return -1;
 		}
 	}
+	
+	void handleBroomDeleteStatus(int status) {
+		switch(status) {
+		case 0:
+			JOptionPane.showMessageDialog(null, "Successfully deleted");
+			break;
+		case 1:
+			JOptionPane.showMessageDialog(null, "Error Code 1: BroomstickID does not exist");
+			break;
+		}
+	}
+	
 	public ArrayList<String> getBroomsticks(){
 		try{
 			ArrayList<String> broomsticks = new ArrayList<>();

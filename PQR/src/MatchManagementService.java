@@ -14,7 +14,7 @@ public class MatchManagementService {
 		this.conn = conn;
 	}
 
-	void InsertMatch(String homeTeamID, String awayTeamID, String homeTeamScore, String awayTeamScore, String date, String stadium) {
+	int InsertMatch(String homeTeamID, String awayTeamID, String homeTeamScore, String awayTeamScore, String date, String stadium) {
 		try {
 			CallableStatement cs = conn.prepareCall("{ ? = call [Insert_Match](?, ?, ?, ?, ?, ?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
@@ -26,20 +26,25 @@ public class MatchManagementService {
 			cs.setString(7, stadium);
 			cs.execute();
 			int status = Integer.parseInt(cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully inserted!");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "Error Code 1: The Date entered cannot be from after the current date.");
-				break;
-			}
+			return status;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return -1;
 		}
 	}
 	
-	void UpdateMatch(String matchID, String homeTeamID, String awayTeamID, String homeTeamScore, String awayTeamScore, String date, String stadium) {
+	void handleInsertStatus(int status) {
+		switch(status) {
+		case 0:
+			JOptionPane.showMessageDialog(null, "Successfully inserted!");
+			break;
+		case 1:
+			JOptionPane.showMessageDialog(null, "Error Code 1: The Date entered cannot be from after the current date.");
+			break;
+		}
+	}
+	
+	int UpdateMatch(String matchID, String homeTeamID, String awayTeamID, String homeTeamScore, String awayTeamScore, String date, String stadium) {
 		try {
 			CallableStatement cs = conn.prepareCall("{ ? = call [Update_Match](?, ?, ?, ?, ?, ?, ?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
@@ -52,47 +57,58 @@ public class MatchManagementService {
 			cs.setString(8, stadium);
 			cs.execute();
 			int status = Integer.parseInt(cs.getString(1));
+			return status;
 			//JOptionPane.showMessageDialog(null, cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully updated!");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "Error Code 1: MatchID cannot be null.");
-				break;
-			case 2:
-				JOptionPane.showMessageDialog(null, "Error Code 2: Invalid MatchID.");
-				break;
-			case 3:
-				JOptionPane.showMessageDialog(null, "Error Code 3: Cannot insert a future date into the database.");
-				break;
-			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return -1;
 		}
 	}
+	
+void handleUpdateStatus(int status) {
+	switch(status) {
+	case 0:
+		JOptionPane.showMessageDialog(null, "Successfully updated!");
+		break;
+	case 1:
+		JOptionPane.showMessageDialog(null, "Error Code 1: MatchID cannot be null.");
+		break;
+	case 2:
+		JOptionPane.showMessageDialog(null, "Error Code 2: Invalid MatchID.");
+		break;
+	case 3:
+		JOptionPane.showMessageDialog(null, "Error Code 3: Cannot insert a future date into the database.");
+		break;
+	}
+	}
 
-	void DeleteMatch(String matchID) {
+	int DeleteMatch(String matchID) {
 		try {
 			CallableStatement cs = conn.prepareCall("{ ? = call [Delete_Match](?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, matchID);
 			cs.execute();
 			int status = Integer.parseInt(cs.getString(1));
-			switch(status) {
-			case 0:
-				JOptionPane.showMessageDialog(null, "Successfully deleted!");
-				break;
-			case 1:
-				JOptionPane.showMessageDialog(null, "Error Code 1: MatchID cannot be null.");
-				break;
-			case 2:
-				JOptionPane.showMessageDialog(null, "Error Code 2: Invalid MatchID.");
-				break;
-			}
+			return status;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return -1;
 		}
+	}
+	
+void handleDeleteStatus(int status) {
+	switch(status) {
+	case 0:
+		JOptionPane.showMessageDialog(null, "Successfully deleted!");
+		break;
+	case 1:
+		JOptionPane.showMessageDialog(null, "Error Code 1: MatchID cannot be null.");
+		break;
+	case 2:
+		JOptionPane.showMessageDialog(null, "Error Code 2: Invalid MatchID.");
+		break;
+	}
 	}
 	
 	public ArrayList<String> getInfoFromID(String ID) {
