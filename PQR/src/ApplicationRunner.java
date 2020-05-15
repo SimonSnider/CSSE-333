@@ -18,6 +18,8 @@ import javax.swing.border.Border;
 
 public class ApplicationRunner {
 	DatabaseConnectionService connector = new DatabaseConnectionService(null, null);
+	ImportManager im = new ImportManager(connector.getConnection());
+	boolean t = im.importBroomsticks();
 	AthleteManagementService ams;
 	TeamManagementService tms; 
 	MatchManagementService mms; 
