@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import javafx.scene.control.DatePicker;
+
 public class ApplicationRunner {
 	DatabaseConnectionService connector = new DatabaseConnectionService(null, null);
 	ImportManager im;
@@ -227,7 +229,7 @@ public class ApplicationRunner {
 					temp = (String)acb.get(3).getSelectedItem();
 					pos = temp.indexOf(",", 0);
 					String ID3 = temp.substring(0,pos);
-					mms.insertMatch(ID2, ID3, runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText());
+					mms.InsertMatch(ID2, ID3, runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText());
 					runMatchInput();
 					break;
 				case "Broomstick":
@@ -548,7 +550,7 @@ public class ApplicationRunner {
 			runBox5.addItem((String)tempObject);
 			runBox6.addItem((String)tempObject);
 		}
-		String matchFields[] = {"Home Team", "Away Team", "Home Score", "Away Score", "Date", "Stadium", "Matches", "Home Team", "Away Team", "Home Score", "Away Score", "Date", "Stadium", "Matches"};
+		String matchFields[] = {"Home Team", "Away Team", "Home Score", "Away Score", "Date (yyyy-mm-dd)", "Stadium", "Matches", "Home Team", "Away Team", "Home Score", "Away Score", "Date (yyyy-mm-dd)", "Stadium", "Matches"};
 		for(int a = 0; a < 14; a++) {
 			al.get(a).setText(matchFields[a]);
 		}
@@ -648,7 +650,7 @@ public class ApplicationRunner {
 			runBox1.addItem((String)tempObject);
 			runBox2.addItem((String)tempObject);
 		}
-		String broomstickFields[] = {"Make", "Model", "Release Date", "Broomsticks", "Make", "Model", "Release Date", "Broomsticks"};
+		String broomstickFields[] = {"Make", "Model", "Release Date (yyyy-mm-dd)", "Broomsticks", "Make", "Model", "Release Date (yyyy-mm-dd)", "Broomsticks"};
 		for(int a = 0; a < 8; a++) {
 			al.get(a).setText(broomstickFields[a]);
 		}
@@ -744,7 +746,9 @@ public class ApplicationRunner {
 					mms = new MatchManagementService(connector.getConnection());
 					bms = new BroomstickManagementService(connector.getConnection());
 					im = new ImportManager(connector.getConnection());
-					im.importMatches();
+					im.importTeams();
+					im.importAthletes();
+					im.importRides();
 					if (t == true) {
 						timer.start();
 						label.setText("Successfully connected!");
