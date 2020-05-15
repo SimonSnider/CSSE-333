@@ -745,6 +745,7 @@ public class ApplicationRunner {
 					bms = new BroomstickManagementService(connector.getConnection());
 					im = new ImportManager(connector.getConnection());
 					im.importTeams();
+					im.importAthletes();
 					if (t == true) {
 						timer.start();
 						label.setText("Successfully connected!");

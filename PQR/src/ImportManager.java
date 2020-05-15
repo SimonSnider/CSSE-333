@@ -16,7 +16,7 @@ public class ImportManager {
 	
 	public ImportManager(Connection conn) {
 		this.conn = conn;
-		this.file = new File("C:\\Users\\snidersa\\git\\CSSE-333\\PQR data.xlsx");
+		this.file = new File("C:\\Users\\hernanre\\git\\CSSE-333(new)\\PQR data.xlsx");
 	}
 	
 	public boolean importBroomsticks() {
@@ -86,5 +86,44 @@ public class ImportManager {
 		}
 	}
 	
+	public boolean importAthletes() {
+		try {
+			AthleteManagementService ams = new AthleteManagementService(this.conn);
+			FileInputStream fis = new FileInputStream(file);
+			XSSFWorkbook wb = new XSSFWorkbook(fis);
+			XSSFSheet sheet = wb.getSheet("Athlete");
+			
+			
+			
+			Iterator<Row> rowIterator = sheet.iterator();
+			while (rowIterator.hasNext()) {
+				Row row = rowIterator.next();
+				Iterator<Cell> cellIterator = row.cellIterator();
+				
+				while (cellIterator.hasNext()) {
+					String name = cellIterator.next().getStringCellValue();
+					if (name.isEmpty()) {break;}
+					String bludgerHits = Integer.toString((int)cellIterator.next().getNumericCellValue());
+					String grade = Integer.toString((int)cellIterator.next().getNumericCellValue());
+					String pointsScored = Integer.toString((int)cellIterator.next().getNumericCellValue());
+					String school = cellIterator.next().getStringCellValue();
+					String injuries = Integer.toString((int)cellIterator.next().getNumericCellValue());
+					String fouls = Integer.toString((int)cellIterator.next().getNumericCellValue());
+					String ejections = Integer.toString((int)cellIterator.next().getNumericCellValue());
+										
+
+					
+					System.out.println(name + ", " + bludgerHits + ", " + grade + ", " + pointsScored + ", " + school + ", " + injuries + ", " + fouls + ", " + ejections);
+					ams.InsertAthlete(name, bludgerHits, grade, pointsScored, school, fouls, ejections, injuries);
+				}
+				
+			}
+			wb.close();
+			return true;
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
 	
 }
