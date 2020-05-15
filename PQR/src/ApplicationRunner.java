@@ -227,7 +227,7 @@ public class ApplicationRunner {
 					temp = (String)acb.get(3).getSelectedItem();
 					pos = temp.indexOf(",", 0);
 					String ID3 = temp.substring(0,pos);
-					mms.InsertMatch(ID2, ID3, runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText());
+					mms.insertMatch(ID2, ID3, runField13.getText(), runField14.getText(), runField15.getText(), runField16.getText());
 					runMatchInput();
 					break;
 				case "Broomstick":
@@ -744,8 +744,7 @@ public class ApplicationRunner {
 					mms = new MatchManagementService(connector.getConnection());
 					bms = new BroomstickManagementService(connector.getConnection());
 					im = new ImportManager(connector.getConnection());
-					im.importTeams();
-					im.importAthletes();
+					im.importMatches();
 					if (t == true) {
 						timer.start();
 						label.setText("Successfully connected!");

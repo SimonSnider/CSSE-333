@@ -14,7 +14,7 @@ public class MatchManagementService {
 		this.conn = conn;
 	}
 
-	void InsertMatch(String homeTeamID, String awayTeamID, String homeTeamScore, String awayTeamScore, String date, String stadium) {
+	void insertMatch(String homeTeamID, String awayTeamID, String homeTeamScore, String awayTeamScore, String date, String stadium) {
 		try {
 			CallableStatement cs = conn.prepareCall("{ ? = call [Insert_Match](?, ?, ?, ?, ?, ?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
