@@ -35,6 +35,7 @@ public class MatchManagementService {
 				break;
 			}
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Something was input wrong. Please follow the indicated formats.");
 			e.printStackTrace();
 		}
 	}
@@ -68,6 +69,7 @@ public class MatchManagementService {
 				break;
 			}
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Something was input wrong. Please follow the indicated formats.");
 			e.printStackTrace();
 		}
 	}

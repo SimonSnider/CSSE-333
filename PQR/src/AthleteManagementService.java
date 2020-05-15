@@ -98,7 +98,7 @@ public class AthleteManagementService {
 
 	public ArrayList<String> getInfoFromID(String ID) {
 		try {
-			String[] temparr = {"BludgerHits", "Grade", "PointsScored", "School", "Injuries", "Fouls", "Ejections"};
+			String[] temparr = {"Name", "BludgerHits", "Grade", "PointsScored", "School", "Injuries", "Fouls", "Ejections"};
 			CallableStatement cs = conn.prepareCall("{ ? = call [Get_Athlete_data](?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, ID);
@@ -109,21 +109,22 @@ public class AthleteManagementService {
 				col = rs.findColumn(athleteFields[z]);
 				tempColumns.add(col);
 			}*/
-			int BHC = rs.findColumn(temparr[0]);
-			int GC = rs.findColumn(temparr[1]);
-			int PSC = rs.findColumn(temparr[2]);
-			int SC = rs.findColumn(temparr[3]);
-			int IC = rs.findColumn(temparr[4]);
-			int FC = rs.findColumn(temparr[5]);
-			int EC = rs.findColumn(temparr[6]);
-			int[] arr = {BHC, GC, PSC, SC, IC, FC, EC};
+			int NC = rs.findColumn(temparr[0]);
+			int BHC = rs.findColumn(temparr[1]);
+			int GC = rs.findColumn(temparr[2]);
+			int PSC = rs.findColumn(temparr[3]);
+			int SC = rs.findColumn(temparr[4]);
+			int IC = rs.findColumn(temparr[5]);
+			int FC = rs.findColumn(temparr[6]);
+			int EC = rs.findColumn(temparr[7]);
+			int[] arr = {NC, BHC, GC, PSC, SC, IC, FC, EC};
 			ArrayList<String> tempInfo = new ArrayList<String>();
 			/*for(int y = 0; y < 7; y++) {
 				tempInfo.add(y, rs.getString(tempColumns.get(y)));
 				y++;
 			}*/
 			while(rs.next()) {
-				for(int y = 0; y < 7; y++) {
+				for(int y = 0; y < 8; y++) {
 					tempInfo.add(y, rs.getString(arr[y]));
 				}
 			/*tempInfo.add(y++, rs.getString(BHC));

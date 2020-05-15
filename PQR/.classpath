@@ -39,10 +39,10 @@
 	<classpathentry kind="lib" path="jasypt-1.9.2/lib/jasypt-wicket15-1.9.2.jar"/>
 	<classpathentry kind="lib" path="mssql-jdbc-6.2.2.jre8.jar"/>
 	<classpathentry kind="lib" path="SodaBaseUi.jar"/>
-	<classpathentry kind="lib" path="C:/Users/snidersa/git/CSSE-333/PQR/jasypt-1.9.2/lib/commons-collections4-4.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/snidersa/git/CSSE-333/PQR/jasypt-1.9.2/lib/poi-3.17.jar"/>
-	<classpathentry kind="lib" path="C:/Users/snidersa/git/CSSE-333/PQR/jasypt-1.9.2/lib/poi-ooxml-3.17.jar"/>
-	<classpathentry kind="lib" path="C:/Users/snidersa/git/CSSE-333/PQR/jasypt-1.9.2/lib/poi-ooxml-schemas-3.17.jar"/>
-	<classpathentry kind="lib" path="C:/Users/snidersa/git/CSSE-333/PQR/jasypt-1.9.2/lib/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="jasypt-1.9.2/lib/commons-collections4-4.1.jar"/>
+	<classpathentry kind="lib" path="jasypt-1.9.2/lib/poi-3.17.jar"/>
+	<classpathentry kind="lib" path="jasypt-1.9.2/lib/poi-ooxml-3.17.jar"/>
+	<classpathentry kind="lib" path="jasypt-1.9.2/lib/poi-ooxml-schemas-3.17.jar"/>
+	<classpathentry kind="lib" path="jasypt-1.9.2/lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

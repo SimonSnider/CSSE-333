@@ -86,6 +86,7 @@ void Delete(String TeamID) {
 		}
 	}
 	catch(SQLException e) {
+		JOptionPane.showMessageDialog(null, "You cannot delete a team that has competed in a match.");
 		e.printStackTrace();
 	}
 }
@@ -113,7 +114,7 @@ public ArrayList<String> getTeams(){
 
 public ArrayList<String> getInfoFromID(String ID) {
 	try {
-		String[] temparr = {"State", "County"};
+		String[] temparr = {"Name", "State", "County"};
 		CallableStatement cs = conn.prepareCall("{ ? = call [Get_Team_data](?) }");
 		cs.registerOutParameter(1, Types.INTEGER);
 		cs.setString(2, ID);
@@ -124,16 +125,17 @@ public ArrayList<String> getInfoFromID(String ID) {
 			col = rs.findColumn(athleteFields[z]);
 			tempColumns.add(col);
 		}*/
-		int SC = rs.findColumn(temparr[0]);
-		int CC = rs.findColumn(temparr[1]);
-		int[] arr = {SC, CC};
+		int NC = rs.findColumn(temparr[0]);
+		int SC = rs.findColumn(temparr[1]);
+		int CC = rs.findColumn(temparr[2]);
+		int[] arr = {NC, SC, CC};
 		ArrayList<String> tempInfo = new ArrayList<String>();
 		/*for(int y = 0; y < 7; y++) {
 			tempInfo.add(y, rs.getString(tempColumns.get(y)));
 			y++;
 		}*/
 		while(rs.next()) {
-			for(int y = 0; y < 2; y++) {
+			for(int y = 0; y < 3; y++) {
 				tempInfo.add(y, rs.getString(arr[y]));
 			}
 		/*tempInfo.add(y++, rs.getString(BHC));

@@ -64,7 +64,7 @@ public class CompetedInManagementService {
 				int status = Integer.parseInt(cs.getString(1));
 				switch(status) {
 				case 0:
-					JOptionPane.showMessageDialog(null, "Successfully inserted!");
+					JOptionPane.showMessageDialog(null, "Successfully updated!");
 					break;
 				case 1:
 					JOptionPane.showMessageDialog(null, "Error Code 1: Invalid Parameters.");
@@ -116,24 +116,71 @@ public class CompetedInManagementService {
 			}
 		}
 		
-// *** Commented out until Stored Procedure in SQL is made, will push again once completed ***. 
-//		public ArrayList<String> getCompetetions(){
-//			try{
-//				ArrayList<String> competitions = new ArrayList<>();
-//				CallableStatement statement = this.conn.prepareCall("{? = call [Get_CompetedIn]()}");
-//				statement.registerOutParameter(1, Types.INTEGER);
-//				ResultSet rs = statement.executeQuery();
-//				while(rs.next()) {
-//		 			athletes.add(rs.getInt("TeamID") + ", " + rs.getString("MatchID"));
-//				}
-//				for(String current: competitions) {
-//					System.out.println(current);
-//				}
-//				return competitions;
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
+		public ArrayList<String> getCompetedIn(){
+			try{
+				ArrayList<String> matches = new ArrayList<>();
+				CallableStatement statement = conn.prepareCall("{? = call [Get_CompetedIn]()}");
+				statement.registerOutParameter(1, Types.INTEGER);
+				ResultSet rs = statement.executeQuery();
+				int MIDC = rs.findColumn("MatchID");
+				int TIDC = rs.findColumn("TeamID");
+				int TNC = rs.findColumn("TeamName");
+				while(rs.next()) {
+		 			matches.add(rs.getString(MIDC) + "; " + rs.getString(TNC) + "(" + rs.getString(TIDC) + ")");
+				}
+				for(String current: matches) {
+					System.out.println(current);
+				}
+				return matches;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		public ArrayList<String> getInfoFromID(String MID, String TID) {
+			try {
+				//String[] temparr = {"AthleteID", "MakeID", "TeamID", "Make", "Model"};
+				CallableStatement cs = conn.prepareCall("{ ? = call [Get_CompetedIn_Data](?, ?) }");
+				cs.registerOutParameter(1, Types.INTEGER);
+				cs.setString(2, MID);
+				cs.setString(3, TID);
+				ResultSet rs =  cs.executeQuery();
+				ArrayList<Integer> tempColumns = new ArrayList<Integer>();
+				/*int col = 0;
+				for (int z = 0; z < 7; z++) {
+					col = rs.findColumn(athleteFields[z]);
+					tempColumns.add(col);
+				}*/
+				int TIDC = rs.findColumn("TeamID");
+				int TNC = rs.findColumn("TeamName");
+				int MIDC = rs.findColumn("MatchID");
+				int HAC = rs.findColumn("Home/Away");
+				int SC = rs.findColumn("Score");
+				int[] arr = {MIDC, TIDC, TNC, HAC, SC};
+				ArrayList<String> tempInfo = new ArrayList<String>();
+				/*for(int y = 0; y < 7; y++) {
+					tempInfo.add(y, rs.getString(tempColumns.get(y)));
+					y++;
+				}*/
+				while(rs.next()) {
+					for(int y = 0; y < 5; y++) {
+						tempInfo.add(y, rs.getString(arr[y]));
+					}	
+				/*tempInfo.add(y++, rs.getString(BHC));
+				tempInfo.add(y++, rs.getString(GC));
+				tempInfo.add(y++, rs.getString(PSC));
+				tempInfo.add(y++, rs.getString(SC));
+				tempInfo.add(y++, rs.getString(IC));
+				tempInfo.add(y++, rs.getString(FC));
+				tempInfo.add(y++, rs.getString(EC));*/
+				}
+				return tempInfo;
+			} catch (SQLException e) {
+				JOptionPane.showMessageDialog(null, "Uh oh, something went wrong.");
+				e.printStackTrace();
+				return null;
+			}
+		}
 
 }

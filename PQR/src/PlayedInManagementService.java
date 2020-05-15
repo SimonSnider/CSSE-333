@@ -59,7 +59,7 @@ public class PlayedInManagementService {
 		}
 	}
 	
-	void UpdateCompetedIn(String AthleteID, String MatchID, String TeamID, String BludgerHits, String PointsScored, String Injuries, String Fouls, String Ejections) {
+	void UpdatePlayedIn(String AthleteID, String MatchID, String TeamID, String BludgerHits, String PointsScored, String Injuries, String Fouls, String Ejections) {
 		try {
 			CallableStatement cs = conn.prepareCall("{ ? = call [Update_PlayedIn](?, ?, ?, ?, ?, ?, ?, ?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
@@ -107,7 +107,7 @@ public class PlayedInManagementService {
 		}
 	}
 
-	void DeleteCompetedIn(String AthleteID, String MatchID, String TeamID) {
+	void DeletePlayedIn(String AthleteID, String MatchID, String TeamID) {
 		try {
 			CallableStatement cs = conn.prepareCall("{ ? = call [Delete_PlayedIn](?, ?, ?) }");
 			cs.registerOutParameter(1, Types.INTEGER);
@@ -144,25 +144,79 @@ public class PlayedInManagementService {
 		}
 	}
 	
-//*** Commented out until Stored Procedure in SQL is made, will push again once completed ***. 
-//	public ArrayList<String> getPlayedIns(){
-//		try{
-//			ArrayList<String> playedIns = new ArrayList<>();
-//			CallableStatement statement = this.conn.prepareCall("{? = call [Get_PlayedIn]()}");
-//			statement.registerOutParameter(1, Types.INTEGER);
-//			ResultSet rs = statement.executeQuery();
-//			while(rs.next()) {
-//	 			playedIns.add(rs.getInt("AthleteID") + rs.getInt("MatchID") + ", " + rs.getString("TeamID"));
-//			}
-//			for(String current: playedIns) {
-//				System.out.println(current);
-//			}
-//			return playedIns;
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
+	public ArrayList<String> getPlayedIn(){
+		try{
+			ArrayList<String> matches = new ArrayList<>();
+			CallableStatement statement = conn.prepareCall("{? = call [Get_PlayedIn]()}");
+			statement.registerOutParameter(1, Types.INTEGER);
+			ResultSet rs = statement.executeQuery();
+			int AIDC = rs.findColumn("AthleteID");
+			int ANC = rs.findColumn("AthleteName");
+			int MIDC = rs.findColumn("MatchID");
+			int TIDC = rs.findColumn("TeamID");
+			int TNC = rs.findColumn("TeamName");
+			while(rs.next()) {
+	 			matches.add(rs.getString(MIDC) + "; " + rs.getString(ANC) + "(" + rs.getString(AIDC) + "); " + rs.getString(TNC) + "(" + rs.getString(TIDC) + ")");
+			}
+			for(String current: matches) {
+				System.out.println(current);
+			}
+			return matches;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public ArrayList<String> getInfoFromID(String AID, String MID, String TID) {
+		try {
+			//String[] temparr = {"AthleteID", "MakeID", "TeamID", "Make", "Model"};
+			CallableStatement cs = conn.prepareCall("{ ? = call [Get_PlayedIn_Data](?, ?, ?) }");
+			cs.registerOutParameter(1, Types.INTEGER);
+			cs.setString(2, AID);
+			cs.setString(3, MID);
+			cs.setString(4, TID);
+			ResultSet rs =  cs.executeQuery();
+			ArrayList<Integer> tempColumns = new ArrayList<Integer>();
+			/*int col = 0;
+			for (int z = 0; z < 7; z++) {
+				col = rs.findColumn(athleteFields[z]);
+				tempColumns.add(col);
+			}*/
+			int AIDC = rs.findColumn("AthleteID");
+			int ANC = rs.findColumn("AthleteName");
+			int TIDC = rs.findColumn("TeamID");
+			int TNC = rs.findColumn("TeamName");
+			int BHC = rs.findColumn("BludgerHits");
+			int PSC = rs.findColumn("PointsScored");
+			int IC = rs.findColumn("Injuries");
+			int FC = rs.findColumn("Fouls");
+			int EC = rs.findColumn("Ejections");
+			int[] arr = {AIDC, ANC, TIDC, TNC, BHC, PSC, IC, FC, EC};
+			ArrayList<String> tempInfo = new ArrayList<String>();
+			/*for(int y = 0; y < 7; y++) {
+				tempInfo.add(y, rs.getString(tempColumns.get(y)));
+				y++;
+			}*/
+			while(rs.next()) {
+				for(int y = 0; y < 9; y++) {
+					tempInfo.add(y, rs.getString(arr[y]));
+				}	
+			/*tempInfo.add(y++, rs.getString(BHC));
+			tempInfo.add(y++, rs.getString(GC));
+			tempInfo.add(y++, rs.getString(PSC));
+			tempInfo.add(y++, rs.getString(SC));
+			tempInfo.add(y++, rs.getString(IC));
+			tempInfo.add(y++, rs.getString(FC));
+			tempInfo.add(y++, rs.getString(EC));*/
+			}
+			return tempInfo;
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Uh oh, something went wrong.");
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 }
 
