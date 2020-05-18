@@ -29,7 +29,9 @@ public class ApplicationRunner {
 	PlayedInManagementService pims;
 	PlaysOnManagementService poms;
 	CompetedInManagementService cims;
+	DataGetter getter;
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	JTabbedPane runPane = new JTabbedPane();
 	JFrame frame = new JFrame("PQR");
 	JFrame frame2 = new JFrame("PQR Connect");
 	//JWindow window = new JWindow(frame);
@@ -54,10 +56,19 @@ public class ApplicationRunner {
 		componentAlignY(comp, flty);
 	}
 	
+	public Object[][] getData(String[] array, String arrayName) {
+		return getter.getData(array, arrayName);
+		//return null;
+	}
+	
 	//Initialization of variables
-	JFrame runFrame = new JFrame("Insertion, Deletion, and Updation");
+	JFrame runFrame = new JFrame("PQR");
 	JPanel runPanel = new JPanel();
+	JPanel dataPanel = new JPanel();
 	String[] selects = {"Athlete", "Team", "Match", "Broomstick", "Rides", "PlaysOn", "PlayedIn", "CompetedIn"};
+	String[] teamsAndAthletes = {"Team ID", "Team Name", "Athlete ID", "Athlete Name", "Position", "Joined", "Left"};
+	Object[][] currentData = null;
+	JTable dataTable = new JTable(currentData, teamsAndAthletes);
 	JComboBox runBox = new JComboBox(selects);
 	JTextField runField11 = new JTextField("");
 	JTextField runField12 = new JTextField("");
@@ -122,8 +133,11 @@ public class ApplicationRunner {
 	String athleteFields[] = {"Name", "Bludger Hits", "Grade", "Points Scored", "School", "Injuries", "Fouls", "Ejections", "Name, ID", "Bludger Hits", "Grade", "Points Scored", "School", "Injuries", "Fouls", "Ejections", "Name, ID"};
 
 	public void runProgram() {
+		runPane.addTab("Change Data", null, runPanel);
+		runPane.addTab("Display Data", null, dataPanel);
 		runFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		runBox.setSelectedItem("Athlete");
+		dataPanel.add(dataTable);
 		
 		//General
 		runFrame.setSize(1800, 900);
@@ -518,7 +532,8 @@ public class ApplicationRunner {
 			}
 		});
 		
-		runFrame.add(runPanel);
+		//runFrame.add(runPanel);
+		runFrame.add(runPane);
 		runFrame.setVisible(true);
 		runAthleteInput();
 	}
@@ -1350,6 +1365,7 @@ public class ApplicationRunner {
 					poms = new PlaysOnManagementService(connector.getConnection());
 					pims = new PlayedInManagementService(connector.getConnection());
 					cims = new CompetedInManagementService(connector.getConnection());
+					getter = new DataGetter(connector.getConnection());
 					
 					im = new ImportManager(connector.getConnection());
 
