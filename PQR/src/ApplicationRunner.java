@@ -60,7 +60,7 @@ public class ApplicationRunner {
 	}
 	
 	public Object[][] getData(String[] array, String arrayName) {
-		return getter.getData(array, arrayName);
+		return getter.getData(array, arrayName, "Team ID", "asc");
 		//return null;
 	}
 	
