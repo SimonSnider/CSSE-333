@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.TableColumn;
 
 import javafx.scene.control.DatePicker;
 
@@ -67,8 +69,9 @@ public class ApplicationRunner {
 	JPanel dataPanel = new JPanel();
 	String[] selects = {"Athlete", "Team", "Match", "Broomstick", "Rides", "PlaysOn", "PlayedIn", "CompetedIn"};
 	String[] teamsAndAthletes = {"Team ID", "Team Name", "Athlete ID", "Athlete Name", "Position", "Joined", "Left"};
-	Object[][] currentData = null;
-	JTable dataTable = new JTable(currentData, teamsAndAthletes);
+	//Object[][] currentData = {{"4", "Strikers", "5", "Athyeet", "Seeker", " 2019-07-06", "1776-09-09"}};
+	Object testData[][] = new Object[7][7];
+	ExtendedTable dataTable = null;
 	JComboBox runBox = new JComboBox(selects);
 	JTextField runField11 = new JTextField("");
 	JTextField runField12 = new JTextField("");
@@ -133,15 +136,40 @@ public class ApplicationRunner {
 	String athleteFields[] = {"Name", "Bludger Hits", "Grade", "Points Scored", "School", "Injuries", "Fouls", "Ejections", "Name, ID", "Bludger Hits", "Grade", "Points Scored", "School", "Injuries", "Fouls", "Ejections", "Name, ID"};
 
 	public void runProgram() {
+		
+		//testing
+		for(int i = 0; i < 7; i++) {
+			for(int j = 0; j < 7; j++) {
+				testData[i][j] = (i+1)*(j+1);
+			}
+		}
+		
+		dataTable = new ExtendedTable(testData, teamsAndAthletes);
+		
 		runPane.addTab("Change Data", null, runPanel);
 		runPane.addTab("Display Data", null, dataPanel);
 		runFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		runBox.setSelectedItem("Athlete");
-		dataPanel.add(dataTable);
-		
-		//General
 		runFrame.setSize(1800, 900);
 		runFrame.setLocation((int)screenSize.getWidth()/2-900, (int)screenSize.getHeight()/2-450);
+		dataPanel.setLayout(null);
+		JScrollPane dataScroller = new JScrollPane(dataTable);
+		Dimension d = new Dimension(1600,800);
+		Point p = new Point(100,200);
+		dataScroller.setSize(runFrame.getWidth(),600);
+		dataScroller.setLocation(0,100);
+		dataPanel.add(dataScroller);
+		dataScroller.setVisible(true);
+		dataTable.setVisible(true);
+		dataTable.setLayout(null);
+		TableColumn column = null;
+		int count = dataTable.getColumnCount();
+		for(int i = 0; i < count; i++){
+			column = dataTable.getColumnModel().getColumn(i);
+			column.setWidth(1800/count);
+		}
+		
+		//General
 		runPanel.setSize(1400, 800);
 		runPanel.setLocation(100, 50);
 		runPanel.setLayout(null);
@@ -1331,6 +1359,8 @@ public class ApplicationRunner {
 	}
 	
 	public void runConnect() {
+		runFrame.setResizable(false);
+		frame2.setResizable(false);
 		Color entryBackground = new Color(255, 255, 255, 127);
 		Color failureBackground = new Color(179, 55, 55, 250);
 		Color successBackground = new Color(52, 179, 90, 250);
