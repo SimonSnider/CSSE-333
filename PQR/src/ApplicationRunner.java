@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import javafx.scene.control.DatePicker;
@@ -70,7 +71,7 @@ public class ApplicationRunner {
 	String[] selects = {"Athlete", "Team", "Match", "Broomstick", "Rides", "PlaysOn", "PlayedIn", "CompetedIn"};
 	String[] teamsAndAthletes = {"Team ID", "Team Name", "Athlete ID", "Athlete Name", "Position", "Joined", "Left"};
 	//Object[][] currentData = {{"4", "Strikers", "5", "Athyeet", "Seeker", " 2019-07-06", "1776-09-09"}};
-	Object testData[][] = new Object[7][7];
+	Object testData[][] = new Object[300][7];
 	ExtendedTable dataTable = null;
 	JComboBox runBox = new JComboBox(selects);
 	JTextField runField11 = new JTextField("");
@@ -138,13 +139,15 @@ public class ApplicationRunner {
 	public void runProgram() {
 		
 		//testing
-		for(int i = 0; i < 7; i++) {
+		for(int i = 0; i < 300; i++) {
 			for(int j = 0; j < 7; j++) {
 				testData[i][j] = (i+1)*(j+1);
 			}
 		}
 		
 		dataTable = new ExtendedTable(testData, teamsAndAthletes);
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		runPane.addTab("Change Data", null, runPanel);
 		runPane.addTab("Display Data", null, dataPanel);
@@ -156,7 +159,7 @@ public class ApplicationRunner {
 		JScrollPane dataScroller = new JScrollPane(dataTable);
 		Dimension d = new Dimension(1600,800);
 		Point p = new Point(100,200);
-		dataScroller.setSize(runFrame.getWidth(),600);
+		dataScroller.setSize(runFrame.getWidth()-10,600);
 		dataScroller.setLocation(0,100);
 		dataPanel.add(dataScroller);
 		dataScroller.setVisible(true);
@@ -166,6 +169,7 @@ public class ApplicationRunner {
 		int count = dataTable.getColumnCount();
 		for(int i = 0; i < count; i++){
 			column = dataTable.getColumnModel().getColumn(i);
+			column.setCellRenderer(centerRenderer);
 			column.setWidth(1800/count);
 		}
 		
@@ -1410,6 +1414,7 @@ public class ApplicationRunner {
 						label.setText("Connection failed.");
 						window.setBackground(failureBackground);
 						window.setVisible(true);
+						timer.stop();
 					}
 				} catch (ClassNotFoundException e1) {
 					label.setText("Connection failed.");
