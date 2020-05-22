@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
 import javafx.scene.control.DatePicker;
 
@@ -59,10 +61,10 @@ public class ApplicationRunner {
 		componentAlignY(comp, flty);
 	}
 	
-	public Object[][] getData(String[] array, String arrayName) {
+	/*public Object[][] getData(String[] array, String arrayName) {
 		return getter.getData(array, arrayName, "Team ID", "asc");
 		//return null;
-	}
+	}*/
 	
 	//Initialization of variables
 	JFrame runFrame = new JFrame("PQR");
@@ -71,7 +73,7 @@ public class ApplicationRunner {
 	String[] selects = {"Athlete", "Team", "Match", "Broomstick", "Rides", "PlaysOn", "PlayedIn", "CompetedIn"};
 	String[] teamsAndAthletes = {"Team ID", "Team Name", "Athlete ID", "Athlete Name", "Position", "Joined", "Left"};
 	//Object[][] currentData = {{"4", "Strikers", "5", "Athyeet", "Seeker", " 2019-07-06", "1776-09-09"}};
-	Object testData[][] = new Object[300][7];
+	Object currentData[][] = {{0,1,2,3,4,5,6}};
 	ExtendedTable dataTable = null;
 	JComboBox runBox = new JComboBox(selects);
 	JTextField runField11 = new JTextField("");
@@ -117,6 +119,9 @@ public class ApplicationRunner {
 	JLabel runLabel33 = new JLabel("");
 	JLabel runLabel34 = new JLabel("");
 	JLabel runLabel35 = new JLabel("");
+	JLabel dataLabel2 = new JLabel("Order By");
+	JLabel dataLabel = new JLabel("View");
+	JLabel dataLabel3 = new JLabel("Ascending/Descending");
 	//All purpose boxes for use in place of labels
 	JComboBox runBox1 = new JComboBox();
 	JComboBox runBox2 = new JComboBox();
@@ -128,9 +133,14 @@ public class ApplicationRunner {
 	JComboBox runBox8 = new JComboBox();
 	JComboBox runBox9 = new JComboBox();
 	JComboBox runBox10 = new JComboBox();
+	JComboBox dataBox = new JComboBox();
+	JComboBox dataBox2 = new JComboBox();
+	JComboBox dataBox3 = new JComboBox();
+	//Implement dataBox3() (ascDsc)
 	JButton insertButton = new JButton("Insert");
 	JButton updateButton = new JButton("Update");
 	JButton deleteButton = new JButton("Delete");
+	JButton dataButton = new JButton("Show");
 	ArrayList<JTextField> ap = new ArrayList<JTextField>();
 	ArrayList<JLabel> al = new ArrayList<JLabel>();
 	ArrayList<JComboBox> acb = new ArrayList<JComboBox>();
@@ -139,13 +149,13 @@ public class ApplicationRunner {
 	public void runProgram() {
 		
 		//testing
-		for(int i = 0; i < 300; i++) {
+		/*for(int i = 0; i < 300; i++) {
 			for(int j = 0; j < 7; j++) {
 				testData[i][j] = (i+1)*(j+1);
 			}
-		}
+		}*/
 		
-		dataTable = new ExtendedTable(testData, teamsAndAthletes);
+		dataTable = new ExtendedTable(currentData, teamsAndAthletes);
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		
@@ -162,6 +172,141 @@ public class ApplicationRunner {
 		dataScroller.setSize(runFrame.getWidth()-10,600);
 		dataScroller.setLocation(0,100);
 		dataPanel.add(dataScroller);
+		dataPanel.add(dataBox);
+		dataPanel.add(dataBox2);
+		dataPanel.add(dataLabel);
+		dataPanel.add(dataLabel2);
+		dataPanel.add(dataButton);
+		dataPanel.add(dataLabel3);
+		dataPanel.add(dataBox3);
+		dataTable.setModel(new DefaultTableModel());
+		
+		String[] ASCols = {"Athlete Number", "Name", "BludgerHits", "Grade", "PointsScored", "School", "Injuries", "Fouls", "Ejections"};
+		String[] AIMCols = {"MatchID", "AthleteID", "AthleteName", "TeamID", "TeamName", "PointsScored", "BludgerHits", "Ejections", "Fouls", "Injuries", "Date"};
+		String[] BCols = {"BroomID", "Make", "Model", "ReleaseDate", "Num of Riders"};
+		String[] MCols = {"MatchID", "Stadium", "Date", "HomeTeamID", "Home Team Name", "Home Score", "AwayTeamID", "Away Team Name", "Away Score"};
+		String[] RCols = {"AthleteID", "Athlete Name", "BroomID", "Make", "Model"};
+		String[] TCols = {"TeamID", "Name", "County", "State", "Number of Players"};
+		String[] TACols = {"TeamID", "TeamName", "AthleteID", "AthleteName", "Position", "Joined", "Left"};
+		String[] fields = {"Athlete Statistics", "Athletes and Teams", "Athletes and Matches", "Matches", "Teams", "Rides", "Broomsticks"};
+		for(String tempString : fields) {
+			dataBox.addItem(tempString);
+		}
+		
+		dataBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				dataBox2.removeAllItems();
+				
+				String view = null;
+				String[] inputCols = null;
+				ArrayList<String> columns = new ArrayList<String>();
+				switch((String)dataBox.getSelectedItem()) {
+				case "Athletes and Teams":
+					view = "Get_TeamsAndAthletes_View";
+					inputCols = TACols;
+					break;
+				case "Athletes and Matches":
+					view = "Get_Athletes_In_Matches_View";
+					inputCols = AIMCols;
+					break;
+				case "Athlete Statistics":
+					view = "Get_Athlete_Statistics_View";
+					inputCols = ASCols;
+					break;
+				case "Matches":
+					view = "Get_Match_View";
+					inputCols = MCols;
+					break;
+				case "Rides":
+					view = "Get_Rides_View";
+					inputCols = RCols;
+					break;
+				case "Teams":
+					view = "Get_Teams_View";
+					inputCols = TCols;
+					break;
+				case "Broomsticks":
+					view = "Get_Broomsticks_View";
+					inputCols = BCols;
+					break;
+				default:
+					JOptionPane.showMessageDialog(null, "Somehow your selection box has managed to evade the range of selectable options. Wpw. Impressive.");
+					return;
+				}
+				columns = getter.getColumns(view, inputCols);
+				for(String tempString : columns) {
+					dataBox2.addItem(tempString);
+				}
+			}
+			
+		});
+		
+		dataButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String view = null;
+				String[] inputCols = null;
+				switch((String)dataBox.getSelectedItem()) {
+				case "Athletes and Teams":
+					view = "Get_TeamsAndAthletes_View";
+					inputCols = TACols;
+					break;
+				case "Athletes and Matches":
+					view = "Get_Athletes_In_Matches_View";
+					inputCols = AIMCols;
+					break;
+				case "Athlete Statistics":
+					view = "Get_Athlete_Statistics_View";
+					inputCols = ASCols;
+					break;
+				case "Matches":
+					view = "Get_Match_View";
+					inputCols = MCols;
+					break;
+				case "Rides":
+					view = "Get_Rides_View";
+					inputCols = RCols;
+					break;
+				case "Teams":
+					view = "Get_Teams_View";
+					inputCols = TCols;
+					break;
+				case "Broomsticks":
+					view = "Get_Broomsticks_View";
+					inputCols = BCols;
+					break;
+				default:
+					JOptionPane.showMessageDialog(null, "Somehow your selection box has managed to evade the range of selectable options. Wpw. Impressive.");
+					return;
+				}
+				String ascDsc = (String)dataBox3.getSelectedItem();
+				String column = (String)dataBox2.getSelectedItem();
+				currentData = getter.getData(inputCols, view, column, ascDsc);
+				//dataTable = new ExtendedTable(currentData, inputCols);
+				DefaultTableModel mod = (DefaultTableModel) dataTable.getModel();
+				mod.setRowCount(0);
+				mod.setColumnCount(inputCols.length);
+				for(int i = 0; i < currentData.length; i++) {
+					mod.addRow(currentData[i]);
+				}
+				mod.setColumnIdentifiers(inputCols);
+				mod.fireTableDataChanged();
+				dataTable.setModel(mod);
+				TableColumn col = null;
+				int count = dataTable.getColumnCount();
+				for(int i = 0; i < count; i++){
+					col = dataTable.getColumnModel().getColumn(i);
+					col.setCellRenderer(centerRenderer);
+					col.setWidth(1800/count);
+				}
+			}
+			
+		});
+		
 		dataScroller.setVisible(true);
 		dataTable.setVisible(true);
 		dataTable.setLayout(null);
@@ -259,9 +404,24 @@ public class ApplicationRunner {
 		updateButton.setSize(100, 40);
 		deleteButton.setLocation(runFrame.getWidth()-200, 700);
 		deleteButton.setSize(100, 40);
-		runBox.setLocation(100 ,50);
+		runBox.setLocation(100, 50);
 		runBox.setSize(130, 20);
-		
+		dataBox.setLocation(110, 50);
+		dataBox.setSize(200, 20);
+		dataBox2.setLocation(1300, 50);
+		dataBox2.setSize(200, 20);
+		dataBox3.setLocation(1070, 50);
+		dataBox3.setSize(140, 20);
+		dataLabel2.setLocation(1240, 50);
+		dataLabel2.setSize(100, 20);
+		dataLabel.setLocation(70, 50);
+		dataLabel.setSize(100, 20);
+		dataLabel3.setSize(150, 20);
+		dataLabel3.setLocation(930, 50);
+		dataButton.setLocation(1600, 50);
+		dataButton.setSize(100, 20);
+		dataBox3.addItem("Ascending");
+		dataBox3.addItem("Descending");
 		insertButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
