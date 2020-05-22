@@ -1600,63 +1600,6 @@ public class ApplicationRunner {
 	
 	public void runApplication(String[] args) {
 		runConnect();
-	
-		/*frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		button.addActionListener(new ActionListener() {
-			@Override
-	        public void actionPerformed(ActionEvent e) {
-				JWindow window = new JWindow(frame);
-				window.setBounds(650, 350, 300, 200);
-				JLabel label = new JLabel();
-				window.add(label);
-				try {
-					boolean b = connector.connect(null, null);
-					if (b == true) {
-						label.setText("Successfully connected!");
-						window.setVisible(true);
-					}
-					else {
-						label.setText("Connection failed.");
-						window.setVisible(true);
-					}
-				} catch (ClassNotFoundException e1) {
-					label.setText("Connection failed.");
-					panel.setVisible(true);
-					e1.printStackTrace();
-				}
-			}});
-		frame.setSize(1600, 900);
-		panel.add(new JLabel("Add Entries"));
-		//window.add(new JLabel("New window"));
-		Color entryBackground = new Color(218, 235, 247, 127);
-		Color PQRBackground = new Color(0, 0, 0, 15);
-		panel.setBackground(entryBackground);
-		panel2.setBackground(PQRBackground);
-		panel2.setSize(1600, 700);
-		panel.setSize(1582, 200);
-		panel3.setSize(1582, 35);
-		panel3.setBackground(new Color(0,0,0,0));
-		//window.setVisible(true);
-		dimension = panel.getSize();
-		dimension2 = panel2.getSize();
-		dimension3 = panel3.getSize();
-		Rectangle rect = frame.getBounds();
-		panel.setLocation(0, 0);
-		panel2.setLocation(rect.width - dimension2.width, dimension.height);
-		panel3.setLocation(0, 0);
-		button.setBounds(rect.width - 250, rect.height - 800, 100, 50);
-		panel.setBorder(BorderFactory.createLineBorder(Color.black, 5));
-		panel3.setBorder(BorderFactory.createLineBorder(Color.black, 5));
-		
-		frame.add(button);
-		frame.add(panel3);
-		frame.add(panel);
-		frame.add(panel2);
-		
-		
-		frame.setLayout(null);
-		frame.setVisible(true);
-		*/
 	}
 
 }
