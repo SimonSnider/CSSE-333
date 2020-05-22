@@ -30,28 +30,9 @@ public class DataGetter {
 		else if (ascDesc.compareTo("Descending") == 0) {
 			ascDesc = "Desc";
 		}
-		/*switch(arrayName) {
-		case("Get_TeamsAndAthletes_View"):
-			return getAthleteTeam(colNames, arrayName, columnSort, ascDesc);
-		case("Get_Athletes_In_Matches_View"):
-			return getAthleteMatch(colNames, arrayName, columnSort, ascDesc);
-		case("Get_Teams_View"):
-			return getTeams(colNames, arrayName, columnSort, ascDesc);
-		case("Get_Rides_View"):
-			return getRides(colNames, arrayName, columnSort, ascDesc);
-		case("Get_Match_View"):
-			return getMatch(colNames, arrayName, columnSort, ascDesc);
-		case("Get_Broomsticks_View"):
-			return getBroomsticks(colNames, arrayName, columnSort, ascDesc);
-		case("Get_Athlete_Statistics_View"):
-			return getAthleteStatistics(colNames, arrayName, columnSort, ascDesc);
-		default:
-			JOptionPane.showMessageDialog(null, "Somehow your selection box has managed to evade the range of selectable options. Wpw. Impressive.");
-		return null;
-		}*/
-		return getAthleteTeam(colNames, arrayName, columnSort, ascDesc);
+		return getView(colNames, arrayName, columnSort, ascDesc);
 	}
-	private Object[][] getAthleteTeam(String[] colNames, String arrayName, String columnSort, String ascDesc) {
+	private Object[][] getView(String[] colNames, String arrayName, String columnSort, String ascDesc) {
 		try{
 			//ArrayList<String> matches = new ArrayList<>();
 			Object[][] returner;
@@ -95,30 +76,6 @@ public class DataGetter {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
-	}
-	private Object[][] getAthleteMatch(String[] colNames, String arrayName, String columnSort, String ascDesc) {
-		
-		return null;
-	}
-	private Object[][] getTeams(String[] colNames, String arrayName, String columnSort, String ascDesc) {
-	
-		return null;
-	}
-	private Object[][] getRides(String[] colNames, String arrayName, String columnSort, String ascDesc) {
-	
-		return null;
-	}
-	private Object[][] getMatch(String[] colNames, String arrayName, String columnSort, String ascDesc) {
-	
-		return null;
-	}
-	private Object[][] getBroomsticks(String[] colNames, String arrayName, String columnSort, String ascDesc) {
-	
-		return null;
-	}
-	private Object[][] getAthleteStatistics(String[] colNames, String arrayName, String columnSort, String ascDesc) {
-		
 		return null;
 	}
 }
