@@ -26,10 +26,10 @@ public class ImportManager {
 		this.importAthletes();
 		System.out.println("Importing Broomsticks:");
 		this.importBroomsticks();
-		System.out.println("Importing Matches:");
-		this.importMatches();
 		System.out.println("Importing Teams:");
 		this.importTeams();
+		System.out.println("Importing Matches:");
+		this.importMatches();
 		System.out.println("Importing PlayedIn");
 		this.importPlayedIn();
 		System.out.println("Importing PlaysOn");

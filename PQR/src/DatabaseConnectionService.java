@@ -18,7 +18,7 @@ public class DatabaseConnectionService {
 		this.databaseName = databaseName;
 	}
 
-	public boolean connect(String user, String pass) throws ClassNotFoundException {
+	public boolean connect(String user, String pass, String name) throws ClassNotFoundException {
 		JPanel panel = new JPanel();
 		panel.setBounds(650, 350, 300, 200);
 		JLabel label = new JLabel();
@@ -32,7 +32,7 @@ public class DatabaseConnectionService {
 		
 		try {
 			//Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:sqlserver://golem.csse.rose-hulman.edu;databaseName=PrepQuidditchReport;user=PQRUser30;password={S2G2Password}");
+			Connection con = DriverManager.getConnection("jdbc:sqlserver://golem.csse.rose-hulman.edu;databaseName=" + name + ";user=PQRUser30;password={S2G2Password}");
 			this.connection = con;
 			label.setText("Successfully connected!");
 			panel.setVisible(true);

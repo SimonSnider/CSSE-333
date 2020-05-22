@@ -74,7 +74,7 @@ public class ApplicationRunner {
 	String[] teamsAndAthletes = {"Team ID", "Team Name", "Athlete ID", "Athlete Name", "Position", "Joined", "Left"};
 	//Object[][] currentData = {{"4", "Strikers", "5", "Athyeet", "Seeker", " 2019-07-06", "1776-09-09"}};
 	Object currentData[][] = {{0,1,2,3,4,5,6}};
-	ExtendedTable dataTable = null;
+	JTable dataTable = null;
 	JComboBox runBox = new JComboBox(selects);
 	JTextField runField11 = new JTextField("");
 	JTextField runField12 = new JTextField("");
@@ -155,9 +155,41 @@ public class ApplicationRunner {
 			}
 		}*/
 		
-		dataTable = new ExtendedTable(currentData, teamsAndAthletes);
+		String[] ASCols = {"Athlete Number", "Name", "BludgerHits", "Grade", "PointsScored", "School", "Injuries", "Fouls", "Ejections"};
+		String[] AIMCols = {"MatchID", "AthleteID", "AthleteName", "TeamID", "TeamName", "PointsScored", "BludgerHits", "Ejections", "Fouls", "Injuries", "Date"};
+		String[] BCols = {"BroomID", "Make", "Model", "ReleaseDate", "Num of Riders"};
+		String[] MCols = {"MatchID", "Stadium", "Date", "HomeTeamID", "Home Team Name", "Home Score", "AwayTeamID", "Away Team Name", "Away Score"};
+		String[] RCols = {"AthleteID", "Athlete Name", "BroomID", "Make", "Model"};
+		String[] TCols = {"TeamID", "Name", "County", "State", "Number of Players"};
+		String[] TACols = {"TeamID", "TeamName", "AthleteID", "AthleteName", "Position", "Joined", "Left"};
+		String[] fields = {"Athlete Statistics", "Athletes and Teams", "Athletes and Matches", "Matches", "Teams", "Rides", "Broomsticks"};
+		
+		
+		//dataTable = new ExtendedTable(currentData, teamsAndAthletes);
+		dataTable = new JTable();
+		String[] iCols = ASCols;
+		currentData = getter.getData(iCols, "Get_Athlete_Statistics_View", "Athlete Number", "Asc");
+		dataTable.setModel(new DefaultTableModel());
+		
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		DefaultTableModel mod = (DefaultTableModel) dataTable.getModel();
+		mod.setRowCount(0);
+		mod.setColumnCount(iCols.length);
+		for(int i = 0; i < currentData.length; i++) {
+			mod.addRow(currentData[i]);
+		}
+		mod.setColumnIdentifiers(iCols);
+		mod.fireTableDataChanged();
+		dataTable.setModel(mod);
+		TableColumn col = null;
+		int count = dataTable.getColumnCount();
+		for(int i = 0; i < count; i++){
+			col = dataTable.getColumnModel().getColumn(i);
+			col.setCellRenderer(centerRenderer);
+			col.setWidth(1800/count);
+		}
 		
 		runPane.addTab("Change Data", null, runPanel);
 		runPane.addTab("Display Data", null, dataPanel);
@@ -181,14 +213,6 @@ public class ApplicationRunner {
 		dataPanel.add(dataBox3);
 		dataTable.setModel(new DefaultTableModel());
 		
-		String[] ASCols = {"Athlete Number", "Name", "BludgerHits", "Grade", "PointsScored", "School", "Injuries", "Fouls", "Ejections"};
-		String[] AIMCols = {"MatchID", "AthleteID", "AthleteName", "TeamID", "TeamName", "PointsScored", "BludgerHits", "Ejections", "Fouls", "Injuries", "Date"};
-		String[] BCols = {"BroomID", "Make", "Model", "ReleaseDate", "Num of Riders"};
-		String[] MCols = {"MatchID", "Stadium", "Date", "HomeTeamID", "Home Team Name", "Home Score", "AwayTeamID", "Away Team Name", "Away Score"};
-		String[] RCols = {"AthleteID", "Athlete Name", "BroomID", "Make", "Model"};
-		String[] TCols = {"TeamID", "Name", "County", "State", "Number of Players"};
-		String[] TACols = {"TeamID", "TeamName", "AthleteID", "AthleteName", "Position", "Joined", "Left"};
-		String[] fields = {"Athlete Statistics", "Athletes and Teams", "Athletes and Matches", "Matches", "Teams", "Rides", "Broomsticks"};
 		for(String tempString : fields) {
 			dataBox.addItem(tempString);
 		}
@@ -311,11 +335,11 @@ public class ApplicationRunner {
 		dataTable.setVisible(true);
 		dataTable.setLayout(null);
 		TableColumn column = null;
-		int count = dataTable.getColumnCount();
-		for(int i = 0; i < count; i++){
+		int count1 = dataTable.getColumnCount();
+		for(int i = 0; i < count1; i++){
 			column = dataTable.getColumnModel().getColumn(i);
 			column.setCellRenderer(centerRenderer);
-			column.setWidth(1800/count);
+			column.setWidth(1800/count1);
 		}
 		
 		//General
@@ -1529,6 +1553,15 @@ public class ApplicationRunner {
 		Color failureBackground = new Color(179, 55, 55, 250);
 		Color successBackground = new Color(52, 179, 90, 250);
 		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JTextField connectField = new JTextField();
+		connectField.setEditable(true);
+		JLabel connectLabel = new JLabel("Database Name");
+		connectLabel.setSize(100, 20);
+		connectLabel.setLocation((int) (frame2.getSize().getWidth()/2+100), 10);
+		connectField.setSize(200, 20);
+		connectField.setLocation((int) (frame2.getSize().getWidth()/2+45), 35);
+		panel4.add(connectLabel);
+		panel4.add(connectField);
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1550,7 +1583,8 @@ public class ApplicationRunner {
 					timer.setRepeats(false);
 					window.add(label);
 				try {
-					boolean t = connector.connect(null, null);
+					String dbname = connectField.getText();
+					boolean t = connector.connect(null, null, dbname);
 					ams = new AthleteManagementService(connector.getConnection());
 					tms = new TeamManagementService(connector.getConnection());
 					mms = new MatchManagementService(connector.getConnection());
@@ -1562,6 +1596,7 @@ public class ApplicationRunner {
 					getter = new DataGetter(connector.getConnection());
 					
 					im = new ImportManager(connector.getConnection());
+					im.importAll();
 
 					if (t == true) {
 						timer.start();
@@ -1585,17 +1620,22 @@ public class ApplicationRunner {
 			}
 		});
 		componentAlignXY(button, JButton.CENTER_ALIGNMENT, JButton.CENTER_ALIGNMENT);
-		button.setHorizontalAlignment(JButton.CENTER);
-		button.setVerticalAlignment(JButton.CENTER);
+		//button.setHorizontalAlignment(JButton.CENTER);
+		//button.setVerticalAlignment(JButton.CENTER);
 		frame2.setSize(300, 200);
 		frame2.setBounds((int)screenSize.getWidth()/2-150, (int)screenSize.getHeight()/2-100, 300, 200);
 		frame2.add(panel4);
-		panel4.setBounds(0, 0, 200, 100);
+		//panel4.setBounds(0, 0, 300, 200);
+		panel4.setSize(300,200);
 		panel4.setBackground(entryBackground);
-		frame2.setVisible(true);
+		
 		//panel4.add(button);
-		panel4.setLayout( new GridBagLayout() );
-		panel4.add(button, new GridBagConstraints());
+		button.setLocation((int)(frame2.getSize().getWidth()/2 - 50), (int)(frame2.getSize().getHeight()/2 - 20));
+		button.setSize(100,40);
+		//frame2.setLayout(null);
+		panel4.setLayout(null);
+		panel4.add(button);
+		frame2.setVisible(true);
 	}
 	
 	public void runApplication(String[] args) {
